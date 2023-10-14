@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neptunee.OperationResponse", "src\Neptunee.OperationResponse.csproj", "{F69557E7-BDE8-4067-8389-6472961BCB9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neptunee.OperationResponse.Test", "Neptunee.OperationResponse.Test\Neptunee.OperationResponse.Test.csproj", "{D0235604-C850-4EC3-80D4-7AA200B1F31C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F69557E7-BDE8-4067-8389-6472961BCB9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F69557E7-BDE8-4067-8389-6472961BCB9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F69557E7-BDE8-4067-8389-6472961BCB9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F69557E7-BDE8-4067-8389-6472961BCB9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0235604-C850-4EC3-80D4-7AA200B1F31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0235604-C850-4EC3-80D4-7AA200B1F31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0235604-C850-4EC3-80D4-7AA200B1F31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0235604-C850-4EC3-80D4-7AA200B1F31C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
