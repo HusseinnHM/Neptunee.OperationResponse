@@ -51,7 +51,7 @@ public partial class OperationResponse
 
     public virtual OperationResponse SetMessage(string? message, bool overwrite = false)
     {
-        if (overwrite || Message is not null)
+        if (overwrite || Message is null)
         {
             Message = message;
         }
@@ -61,12 +61,12 @@ public partial class OperationResponse
 
     public virtual OperationResponse SetMessageOnSuccess(string message, bool overwrite = false)
     {
-        return SetMessageIf(IsSuccess, message, overwrite);
+        return OnSuccess(op => op.SetMessage(message, overwrite));
     }
 
     public virtual OperationResponse SetMessageOnFailure(string message, bool overwrite = false)
     {
-        return SetMessageIf(IsFailure, message, overwrite);
+        return OnFailure(op => op.SetMessage(message, overwrite));
     }
 
 
@@ -83,10 +83,6 @@ public partial class OperationResponse
         return this;
     }
 
-    public virtual OperationResponse ValidationError(string description)
-    {
-        return ValidationError(new ValidationError(description));
-    }
 
     internal OperationResponse AddValidationErrors(List<ValidationError> validationErrors)
     {
@@ -101,14 +97,8 @@ public partial class OperationResponse
     }
 
     public virtual OperationResponse OnSuccess(Action<OperationResponse> action)
-    {
-        if (IsSuccess)
-        {
-            action(this);
-        }
+        => OnTrue(IsSuccess, action);
 
-        return this;
-    }
 
     public virtual async Task<OperationResponse> OnSuccessAsync(Func<OperationResponse, Task> task)
     {
@@ -118,16 +108,10 @@ public partial class OperationResponse
         }
 
         return this;
-    }   
-    public virtual OperationResponse OnFailure(Action<OperationResponse> action)
-    {
-        if (IsFailure)
-        {
-            action(this);
-        }
-
-        return this;
     }
+
+    public virtual OperationResponse OnFailure(Action<OperationResponse> action)
+        => OnTrue(IsFailure, action);
 
     public virtual async Task<OperationResponse> OnFailureAsync(Func<OperationResponse, Task> task)
     {
@@ -138,17 +122,7 @@ public partial class OperationResponse
 
         return this;
     }
-
-    protected virtual OperationResponse SetMessageIf(bool flag, string message, bool overwrite)
-    {
-        if (flag)
-        {
-            SetMessage(message, overwrite);
-        }
-
-        return this;
-    }
-
+    
     protected virtual OperationResponse OnTrue(bool flag, Action<OperationResponse> onTrue)
     {
         if (flag)
