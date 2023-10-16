@@ -1,13 +1,13 @@
 ﻿using System.Net;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Neptunee.OResponse.HttpMessages;
-using Neptunee.OResponse.ValidationErrors;
 
 namespace Neptunee.OResponse;
 
 public partial class OperationResponse
 {
-    private readonly List<ValidationError> _validationErrors = new();
+    private readonly List<Error> _errors = new();
     private readonly Dictionary<string, string> _externalProps = new();
     private HttpStatusCode? _statusCode;
 
@@ -36,18 +36,15 @@ public partial class OperationResponse
 
     public bool IsSuccess => StatusCode is >= HttpStatusCode.OK and <= (HttpStatusCode)299;
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Message { get; private set; }
 
-    [JsonIgnore] public bool IsFailure => !IsSuccess;
-    [JsonIgnore] public HttpStatusCode StatusCode => _statusCode ?? (_validationErrors.Any() ? HttpStatusCode.BadRequest : HttpStatusCode.OK);
+    public bool IsFailure => !IsSuccess;
+    public HttpStatusCode StatusCode => _statusCode ?? (_errors.Any() ? HttpStatusCode.BadRequest : HttpStatusCode.OK);
 
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IReadOnlyDictionary<string, string>? ExternalProps => _externalProps.Any() ? _externalProps : null;
+    public IReadOnlyDictionary<string, string> ExternalProps => _externalProps;
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IReadOnlyCollection<ValidationError>? ValidationErrors => _validationErrors.Any() ? _validationErrors : null;
+    public IReadOnlyCollection<Error> Errors => _errors;
 
     public virtual OperationResponse SetMessage(string? message, bool overwrite = false)
     {
@@ -77,16 +74,16 @@ public partial class OperationResponse
     }
 
 
-    public virtual OperationResponse ValidationError(ValidationError validationError)
+    public virtual OperationResponse Error(Error error)
     {
-        _validationErrors.Add(validationError);
+        _errors.Add(error);
         return this;
     }
 
 
-    internal OperationResponse AddValidationErrors(List<ValidationError> validationErrors)
+    internal OperationResponse AddErrors(List<Error> errors)
     {
-        _validationErrors.AddRange(validationErrors);
+        _errors.AddRange(errors);
         return this;
     }
 
@@ -122,7 +119,7 @@ public partial class OperationResponse
 
         return this;
     }
-    
+
     protected virtual OperationResponse OnTrue(bool flag, Action<OperationResponse> onTrue)
     {
         if (flag)
@@ -136,6 +133,6 @@ public partial class OperationResponse
     protected virtual OperationResponse OnFalse(bool flag, Action<OperationResponse> onFalse)
         => OnTrue(!flag, onFalse);
 
-    public static implicit operator OperationResponse(ValidationError validationError) => BadRequest().ValidationError(validationError);
+    public static implicit operator OperationResponse(Error error) => BadRequest().Error(error);
     public static implicit operator OperationResponse(HttpMessage httpMessage) => HttpMessage(httpMessage);
 }
