@@ -5,22 +5,20 @@ namespace Neptunee.OResponse;
 
 public partial class OperationResponse
 {
-    #region Sync
-
     public static OperationResponse SuccessIf(bool predicate, Action<OperationResponse> onFalse)
-        => new OperationResponse().OrSuccessIf(predicate, onFalse);
+        => Unknown().OrSuccessIf(predicate, onFalse);
 
     public static OperationResponse SuccessIf(bool predicate, ValidationError errorOnFalse)
-        => new OperationResponse().OrSuccessIf(predicate, errorOnFalse);
+        => Unknown().OrSuccessIf(predicate, errorOnFalse);
 
     public static OperationResponse SuccessIf(Func<bool> predicate, Action<OperationResponse> onFalse)
-        => new OperationResponse().OrSuccessIf(predicate, onFalse);
+        => Unknown().OrSuccessIf(predicate, onFalse);
 
     public static OperationResponse SuccessIf(Func<bool> predicate, ValidationError errorOnFalse)
-        => new OperationResponse().OrSuccessIf(predicate, errorOnFalse);
+        => Unknown().OrSuccessIf(predicate, errorOnFalse);
 
     public static OperationResponse If(HttpMessage httpMessage)
-        => new OperationResponse().OrIf(httpMessage);
+        => Unknown().OrIf(httpMessage);
 
     public OperationResponse OrSuccessIf(bool predicate, Action<OperationResponse> onFalse)
         => OnFalse(predicate, onFalse);
@@ -40,12 +38,14 @@ public partial class OperationResponse
         SetMessage(httpMessage.Message, true).SetStatusCode(httpMessage.StatusCode);
         foreach (var (key, value) in httpMessage.ExternalProps)
         {
-            _externalProps.Add(key, value);
+            ExternalProp(key, value);
         }
 
         return this;
     }
 
+    public OperationResponse OrIf(Func<HttpMessage> httpMessage)
+        => OrIf(httpMessage());
 
     public OperationResponse AndSuccessIf(Func<bool> predicate, Action<OperationResponse> onFalse)
         => IsSuccess ? OrSuccessIf(predicate, onFalse) : this;
@@ -54,22 +54,6 @@ public partial class OperationResponse
     public OperationResponse AndSuccessIf(Func<bool> predicate, ValidationError errorOnFalse)
         => AndSuccessIf(predicate, response => response.ValidationError(errorOnFalse));
 
-
-    public OperationResponse AndIf(Func<HttpMessage> httpMessageFunc)
-    {
-        if (IsSuccess)
-        {
-            var httpMessage = httpMessageFunc();
-            SetMessage(httpMessage.Message, true);
-            SetStatusCode(httpMessage.StatusCode);
-            foreach (var (key, value) in httpMessage.ExternalProps)
-            {
-                _externalProps.Add(key, value);
-            }
-        }
-
-        return this;
-    }
-
-    #endregion
+    public OperationResponse AndIf(Func<HttpMessage> httpMessage)
+        => IsSuccess ? OrIf(httpMessage) : this;
 }

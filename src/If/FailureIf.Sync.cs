@@ -4,19 +4,17 @@ namespace Neptunee.OResponse;
 
 public partial class OperationResponse
 {
-    #region Sync
-
     public static OperationResponse FailureIf(bool predicate, Action<OperationResponse> onTrue)
-        => new OperationResponse().OrFailureIf(predicate, onTrue);
+        => Unknown().OrFailureIf(predicate, onTrue);
 
     public static OperationResponse FailureIf(bool predicate, ValidationError errorOnTrue)
-        => new OperationResponse().OrFailureIf(predicate, errorOnTrue);
+        => Unknown().OrFailureIf(predicate, errorOnTrue);
 
     public static OperationResponse FailureIf(Func<bool> predicate, Action<OperationResponse> onTrue)
-        => new OperationResponse().OrFailureIf(predicate, onTrue);
+        => Unknown().OrFailureIf(predicate, onTrue);
 
     public static OperationResponse FailureIf(Func<bool> predicate, ValidationError errorOnTrue) 
-        => new OperationResponse().OrFailureIf(predicate, errorOnTrue);
+        => Unknown().OrFailureIf(predicate, errorOnTrue);
 
     public OperationResponse OrFailureIf(bool predicate, Action<OperationResponse> onTrue)
         => OnTrue(predicate, onTrue);
@@ -36,6 +34,4 @@ public partial class OperationResponse
 
     public OperationResponse AndFailureIf(Func<bool> predicate, ValidationError errorOnTrue) 
         => AndFailureIf(predicate, response => response.ValidationError(errorOnTrue));
-
-    #endregion
 }
