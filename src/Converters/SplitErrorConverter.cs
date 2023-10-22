@@ -10,7 +10,7 @@ public class SplitErrorConverter : JsonConverter<IReadOnlyCollection<Error>>
 
     public override void Write(Utf8JsonWriter writer, IReadOnlyCollection<Error> value, JsonSerializerOptions options)
     {
-        var ignoreEmpty = options.GetConverter(typeof(OperationResponse)).GetType() == typeof(IgnoreEmptyPropsOperationResponseConverter);
+        var ignoreEmpty = options.Converters.Any(c => c.GetType() == typeof(IgnoreEmptyPropsOperationResponseConverterFactory));
 
         var errors = value.Where(e => e is not SpecificError).ToList();
         var specErrors = value.OfType<SpecificError>().ToList();
