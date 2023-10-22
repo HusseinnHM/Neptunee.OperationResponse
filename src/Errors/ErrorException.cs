@@ -24,27 +24,12 @@ public class ErrorException : Exception
     public string? Code { get; }
     public string Description { get; }
     public ExternalProps ExternalProps { get; }
-
-    public static void ThrowIf(bool condition, ErrorException errorException)
+    
+    public static void ThrowIf(bool condition, Error error, ExternalProps externalProps = null!)
     {
         if (condition)
         {
-            throw errorException;
+            throw new ErrorException(error, externalProps);
         }
-    }
-
-    public static void ThrowIf(bool condition, Error error, ExternalProps externalProps = null!)
-    {
-        ThrowIf(condition, new ErrorException(error, externalProps));
-    }
-
-    public static void ThrowIf(Func<bool> condition, ErrorException errorException)
-    {
-        ThrowIf(condition(), errorException);
-    }
-
-    public static void ThrowIf(Func<bool> condition, Error error, ExternalProps externalProps = null!)
-    {
-        ThrowIf(condition, new ErrorException(error, externalProps));
     }
 }
