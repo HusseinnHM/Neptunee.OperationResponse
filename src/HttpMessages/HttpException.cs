@@ -4,15 +4,15 @@ namespace Neptunee.OResponse.HttpMessages;
 
 public class HttpException : Exception
 {
-    public HttpException(HttpMessage httpMessage) : this(httpMessage.Message!, httpMessage.StatusCode, httpMessage.ExternalProps)
+    public HttpException(HttpMessage httpMessage) : this(httpMessage.Message, httpMessage.StatusCode, httpMessage.ExternalProps)
     {
         
     }
 
-    public HttpException(string message, HttpStatusCode httpStatusCode, ExternalProps? externalProps = null) : base(message)
+    public HttpException(string? message, HttpStatusCode httpStatusCode, Dictionary<string,string> externalProps = null!) : base(message)
     {
         StatusCode = httpStatusCode;
-        ExternalProps = externalProps ?? new();
+        ExternalProps = new (externalProps ?? new());
     }
 
     public HttpStatusCode StatusCode { get; }
@@ -24,26 +24,14 @@ public class HttpException : Exception
 
     public override string ToString() => Message;
     
-    
-    public static void ThrowIf(bool condition, HttpException httpException)
+    public static void ThrowIf(bool condition, HttpMessage httpMessage)
     {
         if (condition)
         {
-            throw httpException;
+            throw new HttpException(httpMessage);
         }
-    }
-    public static void ThrowIf(bool condition, HttpMessage httpMessage)
-    {
-        ThrowIf(condition, new HttpException(httpMessage));
+        
     }
 
-    public static void ThrowIf(Func<bool> condition, HttpMessage httpMessage)
-    {
-        ThrowIf(condition(),httpMessage);
-    }
 
-    public static void ThrowIf(Func<bool> condition, HttpException httpException)
-    {
-        ThrowIf(condition(), httpException);
-    }
 }

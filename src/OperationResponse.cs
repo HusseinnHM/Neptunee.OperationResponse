@@ -50,7 +50,7 @@ public partial class OperationResponse<TResponse>
         => Unknown().SetStatusCode(HttpStatusCode.BadRequest).SetMessage(message);
 
     public static OperationResponse<TResponse> HttpMessage(HttpMessage httpMessage)
-        => new(httpMessage.StatusCode, httpMessage.Message, httpMessage.ExternalProps);
+        => new(httpMessage.StatusCode, httpMessage.Message, new(httpMessage.ExternalProps));
 
     public string? Message { get; private set; }
     public TResponse? Response { get; set; }
