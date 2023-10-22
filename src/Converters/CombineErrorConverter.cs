@@ -15,7 +15,6 @@ public class CombineErrorConverter : JsonConverter<IReadOnlyCollection<Error>>
         {
             writer.WriteStringValue(error.ToString());
         }
-
         writer.WriteEndArray();
     }
 }

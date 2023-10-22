@@ -9,14 +9,14 @@ public class HttpException : Exception
         
     }
 
-    public HttpException(string message, HttpStatusCode httpStatusCode, Dictionary<string, string>? externalProps = null) : base(message)
+    public HttpException(string message, HttpStatusCode httpStatusCode, ExternalProps? externalProps = null) : base(message)
     {
         StatusCode = httpStatusCode;
         ExternalProps = externalProps ?? new();
     }
 
     public HttpStatusCode StatusCode { get; }
-    public Dictionary<string, string> ExternalProps { get; }
+    public ExternalProps ExternalProps { get; }
 
     public static implicit operator int?(HttpException? http) => (int?)(http?.StatusCode);
     public static implicit operator HttpStatusCode(HttpException http) => http?.StatusCode ?? default;

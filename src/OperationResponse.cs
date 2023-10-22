@@ -1,7 +1,25 @@
-﻿using System.Net;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Net;
 using Neptunee.OResponse.HttpMessages;
 
 namespace Neptunee.OResponse;
+
+public class ExternalProps : ReadOnlyDictionary<string, string>
+{
+    public ExternalProps() : base(new Dictionary<string, string>())
+    {
+    }
+
+    public ExternalProps(IDictionary<string, string> dictionary) : base(dictionary)
+    {
+    }
+
+    internal void TryAdd<TValue>(string key, TValue value)
+    {
+        Dictionary!.TryAdd(key, value!.ToString());
+    }
+}
 
 public class OperationResponse : OperationResponse<NoResponse>
 {
@@ -10,18 +28,17 @@ public class OperationResponse : OperationResponse<NoResponse>
 public partial class OperationResponse<TResponse>
 {
     private readonly List<Error> _errors = new();
-    private readonly Dictionary<string, string> _externalProps = new();
     private HttpStatusCode? _statusCode;
 
     protected OperationResponse()
     {
     }
 
-    protected OperationResponse(HttpStatusCode statusCode, string? message, Dictionary<string, string> externalProps)
+    protected OperationResponse(HttpStatusCode statusCode, string? message, ExternalProps externalProps)
     {
         Message = message;
+        ExternalProps = externalProps;
         _statusCode = statusCode;
-        _externalProps = externalProps;
     }
 
     public static OperationResponse<TResponse> Unknown() => new();
@@ -37,11 +54,13 @@ public partial class OperationResponse<TResponse>
 
     public string? Message { get; private set; }
     public TResponse? Response { get; set; }
+    public ExternalProps ExternalProps { get; private set; } = new();
+
     public bool IsSuccess => StatusCode is >= HttpStatusCode.OK and <= (HttpStatusCode)299;
     public bool IsFailure => !IsSuccess;
     public bool HasResponse => Response is not null;
     public HttpStatusCode StatusCode => _statusCode ?? (_errors.Any() ? HttpStatusCode.BadRequest : HttpStatusCode.OK);
-    public IReadOnlyDictionary<string, string> ExternalProps => _externalProps;
+
     public IReadOnlyCollection<Error> Errors => _errors;
 
     public virtual OperationResponse<TResponse> SetResponse(TResponse response)
@@ -86,7 +105,7 @@ public partial class OperationResponse<TResponse>
 
     public virtual OperationResponse<TResponse> ExternalProp<TValue>(string key, TValue value)
     {
-        _externalProps.TryAdd(key, value.ToString());
+        ExternalProps.TryAdd(key, value);
         return this;
     }
 

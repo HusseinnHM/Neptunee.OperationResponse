@@ -6,12 +6,12 @@ namespace Neptunee.OResponse;
 
 public static class OperationResponseSettings
 {
-    private static JsonConverterFactory _operationResponseConverterFactory = new IgnoreEmptyPropsOperationResponseConverterFactory();
+    private static JsonConverterFactory _operationResponseConverterFactory = new OperationResponseConverterFactory();
 
     public static JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true,
-        Converters = { _operationResponseConverterFactory, new SplitErrorConverter() },
+        Converters = { _operationResponseConverterFactory, new SplitErrorConverter() ,new IgnoreEmptyExternalPropsConverter()},
     };
 
     public static void ResetConverterFactory<TJsonConverterFactory>(TJsonConverterFactory converterFactory) where TJsonConverterFactory : JsonConverterFactory, new()
@@ -33,5 +33,15 @@ public static class OperationResponseSettings
     }
 
     public static void ResetErrorConverter<TJsonConverter>() where TJsonConverter : JsonConverter<IReadOnlyCollection<Error>>, new()
-        => ResetErrorConverter<TJsonConverter>(new());
+        => ResetErrorConverter<TJsonConverter>(new());   
+    
+    public static void ResetExternalPropsConverter<TJsonConverter>(TJsonConverter converter) where TJsonConverter : JsonConverter<ExternalProps>, new()
+    {
+        JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions);
+        JsonSerializerOptions.Converters.Remove(JsonSerializerOptions.GetConverter(typeof(ExternalProps)));
+        JsonSerializerOptions.Converters.Add(converter);
+    }
+
+    public static void ResetExternalPropsConverter<TJsonConverter>() where TJsonConverter : JsonConverter<ExternalProps>, new()
+        => ResetExternalPropsConverter<TJsonConverter>(new());
 }

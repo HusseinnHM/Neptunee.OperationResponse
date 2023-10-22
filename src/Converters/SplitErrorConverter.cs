@@ -10,34 +10,32 @@ public class SplitErrorConverter : JsonConverter<IReadOnlyCollection<Error>>
 
     public override void Write(Utf8JsonWriter writer, IReadOnlyCollection<Error> value, JsonSerializerOptions options)
     {
-        var ignoreEmpty = options.Converters.Any(c => c.GetType() == typeof(IgnoreEmptyPropsOperationResponseConverterFactory));
-
-        var errors = value.Where(e => e is not SpecificError).ToList();
-        var specErrors = value.OfType<SpecificError>().ToList();
-
-        if (!ignoreEmpty || errors.Any())
-        {
-            writer.WriteStartArray(nameof(Error) + "s");
-            foreach (var error in errors)
-            {
-                writer.WriteStringValue(error.Description);
-            }
-
-            writer.WriteEndArray();
-        }
-
-        if (!ignoreEmpty || specErrors.Any())
-        {
-            writer.WriteStartArray(nameof(SpecificError) + "s");
-            foreach (var error in specErrors)
-            {
-                writer.WriteStartObject();
-                writer.WriteString(nameof(error.Code), error.Code);
-                writer.WriteString(nameof(error.Description), error.Description);
-                writer.WriteEndObject();
-            }
-
-            writer.WriteEndArray();
-        }
+        WriteErrors(writer,value.Where(e => e is not SpecificError));
+        WriteSpecificErrors(writer,value.OfType<SpecificError>());
     }
+
+    protected void WriteErrors(Utf8JsonWriter writer, IEnumerable<Error> errors)
+    {
+        writer.WriteStartArray(nameof(Error) + "s");
+        foreach (var error in errors)
+        {
+            writer.WriteStringValue(error.Description);
+        }
+        writer.WriteEndArray();
+    }
+
+    protected void WriteSpecificErrors(Utf8JsonWriter writer, IEnumerable<SpecificError> errors)
+    {
+        writer.WriteStartArray(nameof(SpecificError) + "s");
+        foreach (var error in errors)
+        {
+            writer.WriteStartObject();
+            writer.WriteString(nameof(error.Code), error.Code);
+            writer.WriteString(nameof(error.Description), error.Description);
+            writer.WriteEndObject();
+        }
+
+        writer.WriteEndArray();
+    }
+
 }

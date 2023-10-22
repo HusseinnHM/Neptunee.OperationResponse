@@ -20,7 +20,7 @@ public class OperationResponseConverterFactory : JsonConverterFactory
     }
 }
 
-internal class OperationResponseConverter<TResponse> : BaseOperationResponseConverter<TResponse>
+internal class OperationResponseConverter<TResponse> : JsonConverter<OperationResponse<TResponse>>
 {
     public override OperationResponse<TResponse>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         => JsonSerializer.Deserialize<OperationResponse<TResponse>>(ref reader);
@@ -29,14 +29,16 @@ internal class OperationResponseConverter<TResponse> : BaseOperationResponseConv
     public override void Write(Utf8JsonWriter writer, OperationResponse<TResponse> value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
+        if (value.HasResponse)
+        {
+            writer.WritePropertyName(nameof(value.Response));
+            JsonSerializer.Serialize(writer, value.Response, options);
+        }
 
-        WriteBaseOperationResponse(writer, value, options);
-
+        writer.WriteBoolean(nameof(value.IsSuccess), value.IsSuccess);
+        writer.WriteString(nameof(value.Message), value.Message ?? value.StatusCode.ToString());
         JsonSerializer.Serialize(writer, value.Errors, options);
-
-        writer.WritePropertyName(nameof(value.ExternalProps));
         JsonSerializer.Serialize(writer, value.ExternalProps, options);
-
         writer.WriteEndObject();
     }
 }
