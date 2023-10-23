@@ -35,6 +35,10 @@ public partial class OperationResponse<TResponse>
     public OperationResponse<TResponse> OrIf(HttpMessage httpMessage)
     {
         SetMessage(httpMessage.Message, true).SetStatusCode(httpMessage.StatusCode);
+        if (httpMessage.Error is not null)
+        {
+            Error(httpMessage.Error);
+        }
         foreach (var (key, value) in httpMessage.ExternalProps)
         {
             ExternalProp(key, value);

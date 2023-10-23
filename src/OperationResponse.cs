@@ -17,12 +17,7 @@ public partial class OperationResponse<TResponse>
     {
     }
 
-    protected OperationResponse(HttpStatusCode statusCode, string? message, ExternalProps externalProps)
-    {
-        Message = message;
-        ExternalProps = externalProps;
-        _statusCode = statusCode;
-    }
+
 
     public static OperationResponse<TResponse> Unknown() => new();
 
@@ -33,7 +28,18 @@ public partial class OperationResponse<TResponse>
         => Unknown().SetStatusCode(HttpStatusCode.BadRequest).SetMessage(message);
 
     public static OperationResponse<TResponse> HttpMessage(HttpMessage httpMessage)
-        => new(httpMessage.StatusCode, httpMessage.Message, new(httpMessage.ExternalProps));
+    {
+        var op = Unknown().SetStatusCode(httpMessage.StatusCode).SetMessage(httpMessage.Message);
+        if (httpMessage.Error is not null)
+        {
+            op.Error(httpMessage.Error);
+        }
+        op.ExternalProps = new(httpMessage.ExternalProps);
+        return op;
+    }
+
+    public static OperationResponse<TResponse> HttpMessage(HttpMessage<TResponse> httpMessage)
+        => HttpMessage(httpMessage as HttpMessage).SetResponse(httpMessage.ValueOrDefault()!);
 
     public string? Message { get; private set; }
     public TResponse? Response { get; set; }
@@ -46,7 +52,7 @@ public partial class OperationResponse<TResponse>
 
     public IReadOnlyCollection<Error> Errors => _errors;
 
-    public virtual OperationResponse<TResponse> SetResponse(TResponse response)
+    public virtual OperationResponse<TResponse> SetResponse(TResponse? response)
     {
         Response = response;
         return this;
