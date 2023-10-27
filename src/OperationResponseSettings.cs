@@ -13,8 +13,8 @@ public static class OperationResponseSettings
         WriteIndented = true,
         Converters = { _operationResponseConverterFactory, new SplitErrorConverter() ,new IgnoreEmptyExternalPropsConverter()},
     };
-
-    public static void ResetConverterFactory<TJsonConverterFactory>(TJsonConverterFactory converterFactory) where TJsonConverterFactory : JsonConverterFactory, new()
+    
+    public static void ResetConverterFactory(JsonConverterFactory converterFactory)
     {
         JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions);
         JsonSerializerOptions.Converters.Remove(_operationResponseConverterFactory);
@@ -23,9 +23,9 @@ public static class OperationResponseSettings
     }
 
     public static void ResetConverterFactory<TJsonConverter>() where TJsonConverter : JsonConverterFactory, new()
-        => ResetConverterFactory<TJsonConverter>(new());
+        => ResetConverterFactory(new TJsonConverter());
 
-    public static void ResetErrorConverter<TJsonConverter>(TJsonConverter converter) where TJsonConverter : JsonConverter<IReadOnlyCollection<Error>>, new()
+    public static void ResetErrorConverter(JsonConverter<IReadOnlyCollection<Error>> converter) 
     {
         JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions);
         JsonSerializerOptions.Converters.Remove(JsonSerializerOptions.GetConverter(typeof(IReadOnlyCollection<Error>)));
@@ -33,9 +33,9 @@ public static class OperationResponseSettings
     }
 
     public static void ResetErrorConverter<TJsonConverter>() where TJsonConverter : JsonConverter<IReadOnlyCollection<Error>>, new()
-        => ResetErrorConverter<TJsonConverter>(new());   
+        => ResetErrorConverter(new TJsonConverter());   
     
-    public static void ResetExternalPropsConverter<TJsonConverter>(TJsonConverter converter) where TJsonConverter : JsonConverter<ExternalProps>, new()
+    public static void ResetExternalPropsConverter(JsonConverter<ExternalProps> converter) 
     {
         JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions);
         JsonSerializerOptions.Converters.Remove(JsonSerializerOptions.GetConverter(typeof(ExternalProps)));
@@ -43,5 +43,5 @@ public static class OperationResponseSettings
     }
 
     public static void ResetExternalPropsConverter<TJsonConverter>() where TJsonConverter : JsonConverter<ExternalProps>, new()
-        => ResetExternalPropsConverter<TJsonConverter>(new());
+        => ResetExternalPropsConverter(new TJsonConverter());
 }
