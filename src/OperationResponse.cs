@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using Neptunee.OResponse.HttpMessages;
 
 namespace Neptunee.OResponse;
@@ -140,4 +139,5 @@ public partial class OperationResponse<TResponse>
 
     public static implicit operator OperationResponse<TResponse>(Error error) => BadRequest().Error(error);
     public static implicit operator OperationResponse<TResponse>(HttpMessage httpMessage) => HttpMessage(httpMessage);
+    public static implicit operator OperationResponse<TResponse>(TResponse response) => Ok().SetResponse(response);
 }
