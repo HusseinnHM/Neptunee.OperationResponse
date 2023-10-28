@@ -6,7 +6,7 @@ using Neptunee.OResponse.Converters;
 
 namespace Neptunee.OResponse.DependencyInjection;
 
-public static class OperationResponseCollectionExtensions
+public static class OperationResponseServiceCollectionExtensions
 {
     public static IServiceCollection AddOperationResponseSerializerOptions(this IServiceCollection services,
         JsonConverterFactory? operationResponseJsonConverterFactory = null,
