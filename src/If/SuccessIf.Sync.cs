@@ -1,4 +1,4 @@
-using Neptunee.OResponse.HttpMessages;
+using Neptunee.OResponse.Results;
 
 namespace Neptunee.OResponse;
 
@@ -16,8 +16,8 @@ public partial class OperationResponse<TResponse>
     public static OperationResponse<TResponse> SuccessIf(Func<bool> predicate, Error errorOnFalse)
         => Unknown().OrSuccessIf(predicate, errorOnFalse);
 
-    public static OperationResponse<TResponse> If(HttpMessage httpMessage)
-        => Unknown().OrIf(httpMessage);
+    public static OperationResponse<TResponse> If(Result result)
+        => Unknown().OrIf(result);
 
     public OperationResponse<TResponse> OrSuccessIf(bool predicate, Action<OperationResponse<TResponse>> onFalse)
         => OnFalse(predicate, onFalse);
@@ -32,14 +32,14 @@ public partial class OperationResponse<TResponse>
     public OperationResponse<TResponse> OrSuccessIf(Func<bool> predicate, Error errorOnFalse)
         => OrSuccessIf(predicate, op => op.Error(errorOnFalse));
 
-    public OperationResponse<TResponse> OrIf(HttpMessage httpMessage)
+    public OperationResponse<TResponse> OrIf(Result result)
     {
-        SetMessage(httpMessage.Message, true).SetStatusCode(httpMessage.StatusCode);
-        if (httpMessage.Error is not null)
+        SetMessage(result.Message, true).SetStatusCode(result.StatusCode);
+        if (result.Error is not null)
         {
-            Error(httpMessage.Error);
+            Error(result.Error);
         }
-        foreach (var (key, value) in httpMessage.ExternalProps)
+        foreach (var (key, value) in result.ExternalProps)
         {
             ExternalProp(key, value);
         }
@@ -47,8 +47,8 @@ public partial class OperationResponse<TResponse>
         return this;
     }
 
-    public OperationResponse<TResponse> OrIf(Func<HttpMessage> httpMessage)
-        => OrIf(httpMessage());
+    public OperationResponse<TResponse> OrIf(Func<Result> result)
+        => OrIf(result());
 
     public OperationResponse<TResponse> AndSuccessIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onFalse)
         => IsSuccess ? OrSuccessIf(predicate, onFalse) : this;
@@ -57,6 +57,6 @@ public partial class OperationResponse<TResponse>
     public OperationResponse<TResponse> AndSuccessIf(Func<bool> predicate, Error errorOnFalse)
         => AndSuccessIf(predicate, response => response.Error(errorOnFalse));
 
-    public OperationResponse<TResponse> AndIf(Func<HttpMessage> httpMessage)
-        => IsSuccess ? OrIf(httpMessage) : this;
+    public OperationResponse<TResponse> AndIf(Func<Result> result)
+        => IsSuccess ? OrIf(result) : this;
 }

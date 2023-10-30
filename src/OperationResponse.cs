@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Neptunee.OResponse.HttpMessages;
+using Neptunee.OResponse.Results;
 
 namespace Neptunee.OResponse;
 
@@ -16,8 +16,6 @@ public partial class OperationResponse<TResponse>
     {
     }
 
-
-
     public static OperationResponse<TResponse> Unknown() => new();
 
     public static OperationResponse<TResponse> Ok(string? message = null)
@@ -26,19 +24,20 @@ public partial class OperationResponse<TResponse>
     public static OperationResponse<TResponse> BadRequest(string? message = null)
         => Unknown().SetStatusCode(HttpStatusCode.BadRequest).SetMessage(message);
 
-    public static OperationResponse<TResponse> HttpMessage(HttpMessage httpMessage)
+    public static OperationResponse<TResponse> Result(Result result)
     {
-        var op = Unknown().SetStatusCode(httpMessage.StatusCode).SetMessage(httpMessage.Message);
-        if (httpMessage.Error is not null)
+        var op = Unknown().SetStatusCode(result.StatusCode).SetMessage(result.Message);
+        if (result.Error is not null)
         {
-            op.Error(httpMessage.Error);
+            op.Error(result.Error);
         }
-        op.ExternalProps = new(httpMessage.ExternalProps);
+
+        op.ExternalProps = new(result.ExternalProps);
         return op;
     }
 
-    public static OperationResponse<TResponse> HttpMessage(HttpMessage<TResponse> httpMessage)
-        => HttpMessage(httpMessage as HttpMessage).SetResponse(httpMessage.ValueOrDefault()!);
+    public static OperationResponse<TResponse> Result(Result<TResponse> result)
+        => Result(result as Result).SetResponse(result.ValueOrDefault()!);
 
     public string? Message { get; private set; }
     public TResponse? Response { get; set; }
@@ -138,6 +137,6 @@ public partial class OperationResponse<TResponse>
         => OnTrue(!flag, onFalse);
 
     public static implicit operator OperationResponse<TResponse>(Error error) => BadRequest().Error(error);
-    public static implicit operator OperationResponse<TResponse>(HttpMessage httpMessage) => HttpMessage(httpMessage);
+    public static implicit operator OperationResponse<TResponse>(Result result) => Result(result);
     public static implicit operator OperationResponse<TResponse>(TResponse response) => Ok().SetResponse(response);
 }

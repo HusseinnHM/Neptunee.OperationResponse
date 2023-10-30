@@ -1,4 +1,4 @@
-using Neptunee.OResponse.HttpMessages;
+using Neptunee.OResponse.Results;
 
 namespace Neptunee.OResponse;
 
@@ -18,11 +18,11 @@ public static class AwaitableSuccessIf
     public static async Task<OperationResponse<TResponse>> OrSuccessIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<bool> predicate, Error errorOnFalse)
         => (await task).OrSuccessIf(predicate, errorOnFalse);
 
-    public static async Task<OperationResponse<TResponse>> OrIf<TResponse>(this Task<OperationResponse<TResponse>> task, HttpMessage httpMessage)
-        => (await task).OrIf(httpMessage);
+    public static async Task<OperationResponse<TResponse>> OrIf<TResponse>(this Task<OperationResponse<TResponse>> task, Result result)
+        => (await task).OrIf(result);
 
-    public static async Task<OperationResponse<TResponse>> OrIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<HttpMessage> httpMessage)
-        => (await task).OrIf(httpMessage);
+    public static async Task<OperationResponse<TResponse>> OrIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Result> result)
+        => (await task).OrIf(result);
 
     public static async Task<OperationResponse<TResponse>> AndSuccessIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<bool> predicate, Action<OperationResponse<TResponse>> onFalse)
         => (await task).AndSuccessIf(predicate, onFalse);
@@ -30,8 +30,8 @@ public static class AwaitableSuccessIf
     public static async Task<OperationResponse<TResponse>> AndSuccessIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<bool> predicate, Error errorOnFalse)
         => (await task).AndSuccessIf(predicate, errorOnFalse);
 
-    public static async Task<OperationResponse<TResponse>> AndIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<HttpMessage> httpMessage)
-        => (await task).AndIf(httpMessage);
+    public static async Task<OperationResponse<TResponse>> AndIf<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Result> result)
+        => (await task).AndIf(result);
 
     #endregion
 
@@ -43,8 +43,8 @@ public static class AwaitableSuccessIf
     public static async Task<OperationResponse<TResponse>> OrSuccessIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<bool>> predicate, Error errorOnFalse)
         => await (await task).OrSuccessIfAsync(predicate, errorOnFalse);
 
-    public static async Task<OperationResponse<TResponse>> OrIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<HttpMessage>> httpMessage)
-        => await (await task).OrIfAsync(httpMessage);
+    public static async Task<OperationResponse<TResponse>> OrIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<Result>> result)
+        => await (await task).OrIfAsync(result);
 
     public static async Task<OperationResponse<TResponse>> AndSuccessIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onFalse)
         => await (await task).AndSuccessIfAsync(predicate, onFalse);
@@ -52,8 +52,8 @@ public static class AwaitableSuccessIf
     public static async Task<OperationResponse<TResponse>> AndSuccessIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<bool>> predicate, Error errorOnFalse)
         => await (await task).AndSuccessIfAsync(predicate, errorOnFalse);
 
-    public static async Task<OperationResponse<TResponse>> AndIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<HttpMessage>> httpMessage)
-        => await (await task).AndIfAsync(httpMessage);
+    public static async Task<OperationResponse<TResponse>> AndIfAsync<TResponse>(this Task<OperationResponse<TResponse>> task, Func<Task<Result>> result)
+        => await (await task).AndIfAsync(result);
 
     #endregion
 }
