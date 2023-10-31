@@ -3,7 +3,7 @@ using Neptunee.OperationsResponse.Results;
 
 namespace Neptunee.OperationsResponse;
 
-public class OperationResponse : OperationResponse<NOperationsResponse>
+public class OperationResponse : OperationResponse<NoResponse>
 {
 }
 
