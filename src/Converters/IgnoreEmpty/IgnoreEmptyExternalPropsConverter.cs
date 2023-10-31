@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Neptunee.OResponse.Converters;
+namespace Neptunee.OperationsResponse.Converters;
 
 public class IgnoreEmptyExternalPropsConverter : ExternalPropsConverter
 {

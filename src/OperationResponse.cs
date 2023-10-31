@@ -1,9 +1,9 @@
 ﻿using System.Net;
-using Neptunee.OResponse.Results;
+using Neptunee.OperationsResponse.Results;
 
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
-public class OperationResponse : OperationResponse<NoResponse>
+public class OperationResponse : OperationResponse<NOperationsResponse>
 {
 }
 

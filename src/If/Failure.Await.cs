@@ -1,4 +1,4 @@
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
 public static class AwaitableFailureIf
 {

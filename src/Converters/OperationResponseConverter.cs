@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Neptunee.OResponse.Converters;
+namespace Neptunee.OperationsResponse.Converters;
 
 public class OperationResponseConverterFactory : JsonConverterFactory
 {

@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Neptunee.OResponse.Converters;
+using Neptunee.OperationsResponse.Converters;
 
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
 public static class OperationResponseSettings
 {

@@ -1,3 +1,3 @@
-﻿namespace Neptunee.OResponse;
+﻿namespace Neptunee.OperationsResponse;
 
-public abstract record NoResponse;
+public abstract record NOperationsResponse;

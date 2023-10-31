@@ -1,4 +1,4 @@
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
 public record SpecificError(string Code, string Description) : Error(Description)
 {

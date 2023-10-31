@@ -1,6 +1,6 @@
-using Neptunee.OResponse.Results;
+using Neptunee.OperationsResponse.Results;
 
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
 public static class AwaitableSuccessIf
 {

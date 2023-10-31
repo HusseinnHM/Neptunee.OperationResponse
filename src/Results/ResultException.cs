@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Neptunee.OResponse.Results;
+namespace Neptunee.OperationsResponse.Results;
 
 public class ResultException : Exception
 {

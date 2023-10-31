@@ -1,4 +1,4 @@
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
 public partial class OperationResponse<TResponse>
 {

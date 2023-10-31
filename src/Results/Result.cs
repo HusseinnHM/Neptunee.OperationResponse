@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Neptunee.OResponse.Results;
+namespace Neptunee.OperationsResponse.Results;
 
 public record Result(HttpStatusCode StatusCode, Error? Error = null,string? Message = null, Dictionary<string,string> ExternalProps = null!)
 {

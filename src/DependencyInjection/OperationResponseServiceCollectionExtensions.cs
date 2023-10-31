@@ -2,9 +2,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Neptunee.OResponse.Converters;
+using Neptunee.OperationsResponse.Converters;
 
-namespace Neptunee.OResponse.DependencyInjection;
+namespace Neptunee.OperationsResponse.DependencyInjection;
 
 public static class OperationResponseServiceCollectionExtensions
 {

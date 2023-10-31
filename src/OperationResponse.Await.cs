@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Neptunee.OResponse;
+namespace Neptunee.OperationsResponse;
 
 public static class AwaitableOperationResponse
 {
