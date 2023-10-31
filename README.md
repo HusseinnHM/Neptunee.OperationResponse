@@ -7,7 +7,7 @@ eliminates complex if/else statements and offers multi-status support, a user-fr
 compatibility, sync/async operations, and more. It's a clean way to manage the outcomes of your backend.
 
 <p align="center">
-<img width="10%" src="icon.png"  alt="icon"/>
+<img width="23%" src="icon.png"  alt="icon"/>
 
 ## Overview
 
