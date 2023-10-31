@@ -1,6 +1,6 @@
 # Neptunee.OperationResponse
 
-![](https://img.shields.io/nuget/dt/Neptunee.OperationResponse)   [![](https://img.shields.io/nuget/v/Neptunee.OperationResponse)](https://www.nuget.org/packages/Neptunee.BaseCleanArchitecture)
+![](https://img.shields.io/nuget/dt/Neptunee.OperationResponse)   [![](https://img.shields.io/nuget/v/Neptunee.OperationResponse)](https://www.nuget.org/packages/Neptunee.OperationResponse)
 
 *Neptunee.OperationResponse* streamlines how you handle the response in your application. It
 eliminates complex if/else statements and offers multi-status support, a user-friendly API,validations checks, JSON
