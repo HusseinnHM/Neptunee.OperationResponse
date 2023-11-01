@@ -573,19 +573,19 @@ The custom JSON converters divided to:
       ###### Inherits ExternalPropsConverter
         - `ExternalProps`: serialize to **object** if are *not empty* otherwise **ignore** it.
         ```json
-            {
-              "IsSuccess": true,
-              "Message": "OK",
-              "ExternalProps": {
-                "key": "value"
-              }
-            }
+        {
+          "IsSuccess": true,
+          "Message": "OK",
+          "ExternalProps": {
+            "key": "value"
+          }
+        }
         ```
         ```json
-            {
-              "IsSuccess": true,
-              "Message": "OK"
-            }
+        {
+          "IsSuccess": true,
+           "Message": "OK"
+        }
         ```
 - Errors
     - [SplitErrorConverter](src/Converters/SplitErrorConverter.cs):
