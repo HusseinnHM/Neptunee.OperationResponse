@@ -11,7 +11,7 @@ public static class OperationSettings
     public static JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true,
-        Converters = { _operationConverterFactory, new SplitErrorConverter() ,new IgnoreEmptyExternalPropsConverter()},
+        Converters = { _operationConverterFactory, new IgnoreEmptySplitErrorConverter() ,new IgnoreEmptyExternalPropsConverter()},
     };
     
     public static void ResetConverterFactory(JsonConverterFactory converterFactory)
