@@ -27,21 +27,6 @@ Operation<Response>
 The `Operation<Response>` Converted to `IActionResult` For actions in the controllers or `IResult` for the endpoint.
 
 ```json
-// After calling ToIActionResult() or ToIResut()
-{
-  "IsSuccess": false,
-  "Message": "One or more validation errors occur",
-  "Errors": [
-    "Age must be 18 or older"
-  ],
-  "SpecificErrors": [
-    {
-      "Code": "Amount", 
-      "Description": "Over maximum"
-    }
-  ]
-}
-//Or when success
 {
   "IsSuccess": true,
   "Message": "It's work",
@@ -51,10 +36,26 @@ The `Operation<Response>` Converted to `IActionResult` For actions in the contro
 }
 ```
 
+```json
+{
+  "IsSuccess": false,
+  "Message": "One or more validation errors occur",
+  "Errors": [
+    "Age must be 18 or older"
+  ],
+  "SpecificErrors": [
+    {
+      "Code": "Amount",
+      "Description": "Over maximum"
+    }
+  ]
+}
+```
+
 ## Schema
 
 <details>
-  <summary><code>Operation&lt;TResponse&gt;</code></summary>
+  <summary>Operation&lt;TResponse&gt;</summary>
 
 #### Properties
 
@@ -96,15 +97,9 @@ The `Operation<Response>` Converted to `IActionResult` For actions in the contro
 
 </details>
 <details>
-  <summary><code>NoResponse</code></summary>
+    <summary>SuccessIf.Sync</summary>
 
-The [NoResponse](src/NoResponse.cs) is abstract record to define that operation will not return actual response data.
-
-</details>
-<details>
-    <summary><code>SuccessIf.Sync</code></summary>
-
-###### Partial of `Operation<TResponse>`
+<br>*Partial class* `Operation<TResponse>`.
 
 #### Methods
 
@@ -132,9 +127,9 @@ The [NoResponse](src/NoResponse.cs) is abstract record to define that operation 
 
 </details>
 <details>
-    <summary><code>SuccessIf.Async</code></summary>
+    <summary>SuccessIf.Async</summary>
 
-Asynchronous method of `SuccessIf.Sync`.
+<br>*Asynchronous of* `SuccessIf.Sync`.
 
 #### Methods
 
@@ -157,9 +152,9 @@ Asynchronous method of `SuccessIf.Sync`.
 </details>
 
 <details>
-    <summary><code>FailureIf.Sync</code></summary>
+    <summary>FailureIf.Sync</summary>
 
-Partial of `Operation<TResponse>`
+<br>*Partial class* `Operation<TResponse>`.
 
 #### Methods
 
@@ -184,9 +179,9 @@ Partial of `Operation<TResponse>`
 </details>
 
 <details>
-    <summary><code>FailureIf.Async</code></summary>
+    <summary>FailureIf.Async</summary>
 
-Asynchronous method of `FailureIf.Sync`.
+<br>*Asynchronous of* `FailureIf.Sync`.
 
 #### Methods
 
@@ -205,12 +200,16 @@ Asynchronous method of `FailureIf.Sync`.
 | `FailureIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                  |
 
 </details>
-
-
 <details>
-  <summary><code>Error</code></summary>
+  <summary>NoResponse</summary>
 
-The `Error` record represents a error with a textual description. It is commonly used to provide human-readable error messages.
+<br>The [NoResponse](src/NoResponse.cs) is abstract record to define that operation will not return actual response data.
+
+</details>
+<details>
+  <summary>Error</summary>
+
+<br>The `Error` record represents a error with a textual description. It is commonly used to provide human-readable error messages.
 
 #### Properties
 
@@ -227,11 +226,10 @@ The `Error` record represents a error with a textual description. It is commonly
 </details>
 
 <details>
-  <summary><code>SpecificError</code></summary>
+  <summary>SpecificError</summary>
 
-###### Inherits `Error`
-
-Representing an error with both a code and a description. It is commonly used to provide more specific error information, such as in any prop or field it happened.
+<br>*Inherits* `Error`.
+<br>Representing an error with both a code and a description. It is commonly used to provide more specific error information, such as in any prop or field it happened.
 
 #### Properties
 
@@ -242,11 +240,10 @@ Representing an error with both a code and a description. It is commonly used to
 
 </details>
 <details>
-  <summary><code>Result</code></summary>
+  <summary>Result</summary>
 
-Use the `Result` class in scenarios where you need to handle logic before passing the relevant information to the `Operation<TResponse>`.
-<br>
-It used as an intermediary layer that can encapsulate and communicate information between services or methods.
+<br>Use the `Result` class in scenarios where you need to handle logic before passing the relevant information to the `Operation<TResponse>`.
+<br>It used as an intermediary layer that can encapsulate and communicate information between services or methods.
 
 #### Properties
 
@@ -276,11 +273,10 @@ It used as an intermediary layer that can encapsulate and communicate informatio
 
 </details>
 <details>
-  <summary><code>Result&lt;TValue&gt;</code></summary>
+  <summary>Result&lt;TValue&gt;</summary>
 
-###### Inherits `Result`
-
-Use `Result<TValue>` in case there are `TValue` will returned.
+<br>*Inherits* `Result`.
+<br>Use `Result<TValue>` in case there are `TValue` will returned.
 
 #### Properties
 
@@ -304,9 +300,9 @@ Use `Result<TValue>` in case there are `TValue` will returned.
 
 </details>
 <details>
-  <summary><code>OperationSettings</code></summary>
+  <summary>OperationSettings</summary>
 
-Provides a central place to manage and configure settings related to the serialization of `Operation<TResponse>` objects.
+<br>Provides a central place to manage and configure settings related to the serialization of `Operation<TResponse>` objects.
 
 #### Properties
 
@@ -331,9 +327,9 @@ manage custom JSON converters.
 </details>
 
 <details>
-  <summary><code>OperationServiceCollectionExtensions</code></summary>
+  <summary>OperationServiceCollectionExtensions</summary>
 
-Offers extension methods for configuring the `Operation<TResponse>` JSON serialization options within MVC and HTTP serialization options in ASP.NET Core.
+<br>Offers extension methods for configuring the `Operation<TResponse>` JSON serialization options within MVC and HTTP serialization options in ASP.NET Core.
 
 #### Methods
 
@@ -345,7 +341,7 @@ Use the `OperationServiceCollectionExtensions` class when you want to configure 
 
 </details>
 <details>
-  <summary><code>OperationWrapper</code></summary>
+  <summary>OperationWrapper</summary>
 
 | Method                                                                                                          | Description                                                                                            |
 |-----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
@@ -362,9 +358,8 @@ Use the `OperationServiceCollectionExtensions` class when you want to configure 
 <details>
   <summary>How to validate and set errors</summary>
 
-There are bunch of ways to validate your operation (check out all methods in [Schema](#schema)).
-<br>
-For defining errors there are 3 ways:
+<br>There are bunch of ways to validate your operation (check out all methods in [Schema](#schema)).
+<br>For defining errors there are 3 ways:
 
 - `Error(string Description)` record.
 - `SpecificError(string Code,string Description)` record inherits `Error(string Description)`.
@@ -402,9 +397,8 @@ So you may use `And` in case you have expensive check that you only want to chec
 <details>
   <summary>How to set status code</summary>
 
-You can use `SetStatusCode()` method to set custom status code you need.
-
-No need to set the **Ok** & **BadRequest** status because will automatically set if the `Errors` property was empty or not.
+<br>You can use `SetStatusCode()` method to set custom status code you need.
+<br>No need to set the **Ok** & **BadRequest** status because will automatically set if the `Errors` property was empty or not.
 
 ```csharp
     public Operation<NoResponse> Handel(Request request)
@@ -462,7 +456,7 @@ setters has optional parameter `bool overwrite = false` can make it execute (`Se
 <details>
   <summary>How to set response</summary>
 
-You can use `SetResponse()` method to set the actual data of the operation or just return the response that will implicitly convert to `Operation<TResponse>` with `200` as status code and `OK` as message.
+<br>You can use `SetResponse()` method to set the actual data of the operation or just return the response that will implicitly convert to `Operation<TResponse>` with `200` as status code and `OK` as message.
 
 ```csharp
     public Operation<Response> Handel(Request request)
@@ -488,7 +482,7 @@ You can use `SetResponse()` method to set the actual data of the operation or ju
 <details>
   <summary>How to serialize</summary>
 
-When serialize `Operation<TResponse>` must use `JsonSerializerOptions` in [OperationSettings](src/OperationSettings.cs).
+<br>When serialize `Operation<TResponse>` must use `JsonSerializerOptions` in [OperationSettings](src/OperationSettings.cs).
 
 ```csharp
 JsonSerializer.Serialize(operation, OperationSettings.JsonSerializerOptions);
@@ -520,7 +514,7 @@ P.S: can check the available JSON converters in ****Custom JSON converters**** b
 <details>
   <summary>Custom JSON converters</summary>
 
-The custom JSON converters divided to:
+<br>The custom JSON converters divided to:
 
 - Operation<TResponse>
     - [OperationConverter with Factory](src/Converters/OperationConverter.cs) *(the default)*:
