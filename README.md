@@ -44,7 +44,10 @@ The `Operation<Response>` Converted to `IActionResult` For actions in the contro
 //Or when success
 {
   "IsSuccess": true,
-  "Message": "It's work"
+  "Message": "It's work",
+  "Response": {
+    // your response object
+  }
 }
 ```
 
