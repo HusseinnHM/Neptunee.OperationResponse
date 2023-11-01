@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Neptunee.OperationsResponse;
+namespace Neptunee.OperationResponse;
 
-public static class OperationResponseWrapper
+public static class OperationWrapper
 {
     /// <param name="serializerSettings">
     /// The serializer settings to be used by the formatter.
@@ -16,10 +16,10 @@ public static class OperationResponseWrapper
     /// When using <c>Newtonsoft.Json</c>, this should be an instance of <c>JsonSerializerSettings</c>.
     /// </para>
     /// </param>
-    public static IActionResult ToIActionResult<TResponse>(this OperationResponse<TResponse> operationResponse, object? serializerSettings = null)
-        => new JsonResult(operationResponse, serializerSettings)
+    public static IActionResult ToIActionResult<TResponse>(this Operation<TResponse> operation, object? serializerSettings = null)
+        => new JsonResult(operation, serializerSettings)
         {
-            StatusCode = (int)operationResponse.StatusCode
+            StatusCode = (int)operation.StatusCode
         };
 
     /// <param name="serializerSettings">
@@ -31,25 +31,26 @@ public static class OperationResponseWrapper
     /// When using <c>Newtonsoft.Json</c>, this should be an instance of <c>JsonSerializerSettings</c>.
     /// </para>
     /// </param>
-    public static async Task<IActionResult> ToIActionResultAsync<TResponse>(this Task<OperationResponse<TResponse>> task, object? serializerSettings = null)
+    public static async Task<IActionResult> ToIActionResultAsync<TResponse>(this Task<Operation<TResponse>> task, object? serializerSettings = null)
         => (await task).ToIActionResult();
 
 #if NET6_0_OR_GREATER
-    public static IResult ToIResult<TResponse>(this OperationResponse<TResponse> operationResponse, JsonSerializerOptions? options = null)
-        => Microsoft.AspNetCore.Http.Results.Json(operationResponse,
+    public static IResult ToIResult<TResponse>(this Operation<TResponse> operation, JsonSerializerOptions? options = null)
+        => Microsoft.AspNetCore.Http.Results.Json(operation,
             options: options,
-            statusCode: (int)operationResponse.StatusCode);
+            statusCode: (int)operation.StatusCode);
 
-    public static async Task<IResult> ToIResultAsync<TResponse>(this Task<OperationResponse<TResponse>> task, JsonSerializerOptions? options = null)
+    public static async Task<IResult> ToIResultAsync<TResponse>(this Task<Operation<TResponse>> task, JsonSerializerOptions? options = null)
         => (await task).ToIResult(options);
 #endif
 
-    public static OperationResponse<TResponse> ToOperationResponse<TResponse>(this IdentityResult identityResult)
-        => OperationResponse<TResponse>.SuccessIf(identityResult.Succeeded, op =>
+    public static Operation<TResponse> ToOperation<TResponse>(this IdentityResult identityResult)
+        => Operation<TResponse>.SuccessIf(identityResult.Succeeded, op =>
         {
             foreach (var error in identityResult.Errors.Select(e => new SpecificError(e.Code, e.Description)))
             {
                 op.Error(error);
             }
         });
+    
 }

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Neptunee.OperationsResponse.Converters;
+namespace Neptunee.OperationResponse.Converters;
 
 public class SplitErrorConverter : JsonConverter<IReadOnlyCollection<Error>>
 {

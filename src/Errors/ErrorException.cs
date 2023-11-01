@@ -1,4 +1,4 @@
-namespace Neptunee.OperationsResponse;
+namespace Neptunee.OperationResponse.Exceptions;
 
 public class ErrorException : Exception
 {

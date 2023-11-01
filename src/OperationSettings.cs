@@ -1,24 +1,24 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Neptunee.OperationsResponse.Converters;
+using Neptunee.OperationResponse.Converters;
 
-namespace Neptunee.OperationsResponse;
+namespace Neptunee.OperationResponse;
 
-public static class OperationResponseSettings
+public static class OperationSettings
 {
-    private static JsonConverterFactory _operationResponseConverterFactory = new OperationResponseConverterFactory();
+    private static JsonConverterFactory _operationConverterFactory = new OperationConverterFactory();
 
     public static JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true,
-        Converters = { _operationResponseConverterFactory, new SplitErrorConverter() ,new IgnoreEmptyExternalPropsConverter()},
+        Converters = { _operationConverterFactory, new SplitErrorConverter() ,new IgnoreEmptyExternalPropsConverter()},
     };
     
     public static void ResetConverterFactory(JsonConverterFactory converterFactory)
     {
         JsonSerializerOptions = new JsonSerializerOptions(JsonSerializerOptions);
-        JsonSerializerOptions.Converters.Remove(_operationResponseConverterFactory);
-        _operationResponseConverterFactory = converterFactory;
+        JsonSerializerOptions.Converters.Remove(_operationConverterFactory);
+        _operationConverterFactory = converterFactory;
         JsonSerializerOptions.Converters.Add(converterFactory);
     }
 

@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace Neptunee.OperationsResponse;
+namespace Neptunee.OperationResponse;
 
 public class ExternalProps : ReadOnlyDictionary<string, string>
 {

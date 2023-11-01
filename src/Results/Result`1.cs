@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Neptunee.OperationsResponse.Results;
+namespace Neptunee.OperationResponse;
 
 public record Result<TValue> : Result
 {

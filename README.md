@@ -2,9 +2,7 @@
 
 ![](https://img.shields.io/nuget/dt/Neptunee.OperationResponse)   [![](https://img.shields.io/nuget/v/Neptunee.OperationResponse)](https://www.nuget.org/packages/Neptunee.OperationResponse)
 
-*Neptunee.OperationResponse* streamlines how you handle the response in your application. It
-eliminates complex if/else statements and offers multi-status support, a user-friendly API,validations checks, JSON
-compatibility, sync/async operations, and more. It's a clean way to manage the outcomes of your backend.
+*Neptunee.OperationResponse* streamlines how you handle the response in your application. It eliminates complex if/else statements and offers multi-status support, a user-friendly API,validations checks, JSON compatibility, sync/async operations, and more. It's a clean way to manage the outcomes of your backend.
 
 <p align="center">
 <img width="23%" src="icon.png"  alt="icon"/>
@@ -14,7 +12,7 @@ compatibility, sync/async operations, and more. It's a clean way to manage the o
 The code Inside your Controllers, ApiEndpoints or Command/Query Handlers will be more cleaner and readable.
 
 ```csharp
-OperationResponse
+Operation<Response>
     .SuccessIf(request.Age >= 18, MyValidationErrors.AgeUnder18) // AgeUnder18 is new Error("Age must be 18 or older")
     .OrFailureIf(request.Amount > 1000, MyValidationErrors.AmountOverMax) // AmountOverMax is new SpecificError("Amount","Over maximum") 
     .SetMessageOnFailure("One or more validation errors occur")
@@ -26,7 +24,7 @@ OperationResponse
     .OnFailure(op => _logger.LogError("the logging"))
 ```
 
-The `OperationResponse` Converted to `IActionResult` For actions in the controllers or `IResult` for the endpoint.
+The `Operation<Response>` Converted to `IActionResult` For actions in the controllers or `IResult` for the endpoint.
 
 ```json
 // After calling ToIActionResult() or ToIResut()
@@ -34,13 +32,13 @@ The `OperationResponse` Converted to `IActionResult` For actions in the controll
   "IsSuccess": false,
   "Message": "One or more validation errors occur",
   "Errors": [
-	"Age must be 18 or older"
+    "Age must be 18 or older"
   ],
   "SpecificErrors": [
-	{
-	  "Code": "Amount",
-	  "Description": "Over maximum"
-	}
+    {
+      "Code": "Amount", 
+      "Description": "Over maximum"
+    }
   ]
 }
 //Or when success
@@ -50,12 +48,10 @@ The `OperationResponse` Converted to `IActionResult` For actions in the controll
 }
 ```
 
-P.S: There is also `OperationResponse<TResponse>` accepts the actual response data.
-
 ## Schema
 
 <details>
-  <summary><code>OperationResponse&lt;TResponse&gt;</code></summary>
+  <summary><code>Operation&lt;TResponse&gt;</code></summary>
 
 #### Properties
 
@@ -71,35 +67,33 @@ P.S: There is also `OperationResponse<TResponse>` accepts the actual response da
 
 #### Methods
 
-| Method                                                          | Description                                               |
-|-----------------------------------------------------------------|-----------------------------------------------------------|
-| `SetResponse(TResponse? response)`                              | Sets the response of the operation.                       |
-| `SetMessage(string? message, bool overwrite = false)`           | Sets the message related to the operation.                |
-| `SetMessageOnSuccess(string message, bool overwrite = false)`   | Sets the message when operation is success.               |
-| `SetMessageOnFailure(string message, bool overwrite = false)`   | Sets the message when operation is failure.               |
-| `SetStatusCode(HttpStatusCode statusCode)`                      | Sets the HTTP status code.                                |
-| `Error(Error error)`                                            | Adds an error to the operation.                           |
-| `ExternalProp<TValue>(string key, TValue value)`                | Adds an external property to the operation.               |
-| `OnSuccess(Action<OperationResponse<TResponse>> action)`        | Executes an action when operation is success.             |
-| `OnSuccessAsync(Func<OperationResponse<TResponse>, Task> task)` | Asynchronously executes a task when operation is success. |
-| `OnFailure(Action<OperationResponse<TResponse>> action)`        | Executes an action when operation is failure.             |
-| `OnFailureAsync(Func<OperationResponse<TResponse>, Task> task)` | Asynchronously executes a task when operation is failure. |
+| Method                                                        | Description                                               |
+|---------------------------------------------------------------|-----------------------------------------------------------|
+| `SetResponse(TResponse? response)`                            | Sets the response of the operation.                       |
+| `SetMessage(string? message, bool overwrite = false)`         | Sets the message related to the operation.                |
+| `SetMessageOnSuccess(string message, bool overwrite = false)` | Sets the message when operation is success.               |
+| `SetMessageOnFailure(string message, bool overwrite = false)` | Sets the message when operation is failure.               |
+| `SetStatusCode(HttpStatusCode statusCode)`                    | Sets the HTTP status code.                                |
+| `Error(Error error)`                                          | Adds an error to the operation.                           |
+| `ExternalProp<TValue>(string key, TValue value)`              | Adds an external property to the operation.               |
+| `OnSuccess(Action<Operation<TResponse>> action)`              | Executes an action when operation is success.             |
+| `OnSuccessAsync(Func<Operation<TResponse>, Task> task)`       | Asynchronously executes a task when operation is success. |
+| `OnFailure(Action<Operation<TResponse>> action)`              | Executes an action when operation is failure.             |
+| `OnFailureAsync(Func<Operation<TResponse>, Task> task)`       | Asynchronously executes a task when operation is failure. |
 
 #### Static Factory Methods
 
-| Method                               | Description                                                                      |
-|--------------------------------------|----------------------------------------------------------------------------------|
-| `Unknown()`                          | Creates an `OperationResponse<TResponse>` with an unknown status.                |
-| `Ok(string? message = null)`         | Creates a successful `OperationResponse<TResponse>` with an optional message.    |
-| `BadRequest(string? message = null)` | Creates a failed `OperationResponse<TResponse>` with an optional message.        |
-| `Result(Result result)`              | Creates an `OperationResponse<TResponse>` from an `Result`.                      |
-| `Result(Result<TResponse> result)`   | Creates an `OperationResponse<TResponse>` from an `Result` with a response data. |
+| Method                               | Description                                                              |
+|--------------------------------------|--------------------------------------------------------------------------|
+| `Unknown()`                          | Creates an `Operation<TResponse>` with an unknown status.                |
+| `Ok(string? message = null)`         | Creates a successful `Operation<TResponse>` with an optional message.    |
+| `BadRequest(string? message = null)` | Creates a failed `Operation<TResponse>` with an optional message.        |
+| `Result(Result result)`              | Creates an `Operation<TResponse>` from an `Result`.                      |
+| `Result(Result<TResponse> result)`   | Creates an `Operation<TResponse>` from an `Result` with a response data. |
 
 </details>
 <details>
-  <summary><code>OperationResponse</code></summary>
-
-###### Inherits `OperationResponse<NoResponse>`
+  <summary><code>NoResponse</code></summary>
 
 The [NoResponse](src/NoResponse.cs) is abstract record to define that operation will not return actual response data.
 
@@ -107,31 +101,31 @@ The [NoResponse](src/NoResponse.cs) is abstract record to define that operation 
 <details>
     <summary><code>SuccessIf.Sync</code></summary>
 
-###### Partial of `OperationResponse<TResponse>`
+###### Partial of `Operation<TResponse>`
 
 #### Methods
 
-| Method                                                                             | Description                                                                                                                                                                                                                                       |
-|------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `OrSuccessIf(bool predicate, Action<OperationResponse<TResponse>> onFalse)`        | Executes the provided action `onFalse` on the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                                                                                        |
-| `OrSuccessIf(bool predicate, Error errorOnFalse)`                                  | Adds the provided error `errorOnFalse` to the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                                                                                        |
-| `OrSuccessIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onFalse)`  | Executes the provided action `onFalse` on the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing.                                                                   |
-| `OrSuccessIf(Func<bool> predicate, Error errorOnFalse)`                            | Adds the provided error `errorOnFalse` to the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing.                                                                   |
-| `OrIf(Result result)`                                                              | Modifies the current `OperationResponse<TResponse>` based on the properties of the provided `result`.                                                                                                                                             |
-| `OrIf(Func<Result> result)`                                                        | Modifies the current `OperationResponse<TResponse>` based on the properties of the provided `result` obtained through the function.                                                                                                               |
-| `AndSuccessIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onFalse)` | If the current `OperationResponse<TResponse>` is still a success, executes the provided action `onFalse` on the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
-| `AndSuccessIf(Func<bool> predicate, Error errorOnFalse)`                           | If the current `OperationResponse<TResponse>` is still a success, adds the provided error `errorOnFalse` to the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
-| `AndIf(Func<Result> result)`                                                       | If the current `OperationResponse<TResponse>` is still a success, modifies it based on the properties of the provided `result` obtained through the function.                                                                                     |
+| Method                                                                     | Description                                                                                                                                                                                                                       |
+|----------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `OrSuccessIf(bool predicate, Action<Operation<TResponse>> onFalse)`        | Executes the provided action `onFalse` on the current `Operation<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                                                                                |
+| `OrSuccessIf(bool predicate, Error errorOnFalse)`                          | Adds the provided error `errorOnFalse` to the current `Operation<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                                                                                |
+| `OrSuccessIf(Func<bool> predicate, Action<Operation<TResponse>> onFalse)`  | Executes the provided action `onFalse` on the current `Operation<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing.                                                           |
+| `OrSuccessIf(Func<bool> predicate, Error errorOnFalse)`                    | Adds the provided error `errorOnFalse` to the current `Operation<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing.                                                           |
+| `OrIf(Result result)`                                                      | Modifies the current `Operation<TResponse>` based on the properties of the provided `result`.                                                                                                                                     |
+| `OrIf(Func<Result> result)`                                                | Modifies the current `Operation<TResponse>` based on the properties of the provided `result` obtained through the function.                                                                                                       |
+| `AndSuccessIf(Func<bool> predicate, Action<Operation<TResponse>> onFalse)` | If the current `Operation<TResponse>` is still a success, executes the provided action `onFalse` on the current `Operation<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
+| `AndSuccessIf(Func<bool> predicate, Error errorOnFalse)`                   | If the current `Operation<TResponse>` is still a success, adds the provided error `errorOnFalse` to the current `Operation<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
+| `AndIf(Func<Result> result)`                                               | If the current `Operation<TResponse>` is still a success, modifies it based on the properties of the provided `result` obtained through the function.                                                                             |
 
 #### Static Factory Methods
 
-| Method                                                                          | Description                                                                                                                                                                                                                                |
-|---------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `SuccessIf(bool predicate, Action<OperationResponse<TResponse>> onFalse)`       | Creates a new unknown `OperationResponse<TResponse>`, then executes the provided action `onFalse` on the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                      |
-| `SuccessIf(bool predicate, Error errorOnFalse)`                                 | Creates a new unknown `OperationResponse<TResponse>`, then adds the provided error `errorOnFalse` to the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                      |
-| `SuccessIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onFalse)` | Creates a new unknown `OperationResponse<TResponse>`, then executes the provided action `onFalse` on the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
-| `SuccessIf(Func<bool> predicate, Error errorOnFalse)`                           | Creates a new unknown `OperationResponse<TResponse>`, then adds the provided error `errorOnFalse` to the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
-| `If(Result result)`                                                             | Creates a new unknown `OperationResponse<TResponse>`, then modifies the current `OperationResponse<TResponse>` based on the properties of the provided `result`.                                                                           |
+| Method                                                                  | Description                                                                                                                                                                                                                |
+|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SuccessIf(bool predicate, Action<Operation<TResponse>> onFalse)`       | Creates a new unknown `Operation<TResponse>`, then executes the provided action `onFalse` on the current `Operation<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                      |
+| `SuccessIf(bool predicate, Error errorOnFalse)`                         | Creates a new unknown `Operation<TResponse>`, then adds the provided error `errorOnFalse` to the current `Operation<TResponse>` if the provided boolean `predicate` is `false`, otherwise do nothing.                      |
+| `SuccessIf(Func<bool> predicate, Action<Operation<TResponse>> onFalse)` | Creates a new unknown `Operation<TResponse>`, then executes the provided action `onFalse` on the current `Operation<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
+| `SuccessIf(Func<bool> predicate, Error errorOnFalse)`                   | Creates a new unknown `Operation<TResponse>`, then adds the provided error `errorOnFalse` to the current `Operation<TResponse>` if the boolean result of the provided predicate function is `false`, otherwise do nothing. |
+| `If(Result result)`                                                     | Creates a new unknown `Operation<TResponse>`, then modifies the current `Operation<TResponse>` based on the properties of the provided `result`.                                                                           |
 
 </details>
 <details>
@@ -141,48 +135,48 @@ Asynchronous method of `SuccessIf.Sync`.
 
 #### Methods
 
-| Method                                                                                        |
-|-----------------------------------------------------------------------------------------------|
-| `OrSuccessIfAsync(Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onFalse)`  |
-| `OrSuccessIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                            |
-| `OrIfAsync(Func<Task<Result>> result)`                                                        |
-| `AndSuccessIfAsync(Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onFalse)` |
-| `AndSuccessIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                           |
-| `AndIfAsync(Func<Task<Result>> result)`                                                       |
+| Method                                                                                |
+|---------------------------------------------------------------------------------------|
+| `OrSuccessIfAsync(Func<Task<bool>> predicate, Action<Operation<TResponse>> onFalse)`  |
+| `OrSuccessIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                    |
+| `OrIfAsync(Func<Task<Result>> result)`                                                |
+| `AndSuccessIfAsync(Func<Task<bool>> predicate, Action<Operation<TResponse>> onFalse)` |
+| `AndSuccessIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                   |
+| `AndIfAsync(Func<Task<Result>> result)`                                               |
 
 #### Static Factory Methods
 
-| Method                                                                                     |
-|--------------------------------------------------------------------------------------------|
-| `SuccessIfAsync(Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onFalse)` |
-| `SuccessIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                           |
+| Method                                                                             |
+|------------------------------------------------------------------------------------|
+| `SuccessIfAsync(Func<Task<bool>> predicate, Action<Operation<TResponse>> onFalse)` |
+| `SuccessIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                   |
 
 </details>
 
 <details>
     <summary><code>FailureIf.Sync</code></summary>
 
-Partial of `OperationResponse<TResponse>`
+Partial of `Operation<TResponse>`
 
 #### Methods
 
-| Method                                                                            | Description                                                                                                                                                                                                                                     |
-|-----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `OrFailureIf(bool predicate, Action<OperationResponse<TResponse>> onTrue)`        | Executes the provided action `onTrue` on the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                                                                                        |
-| `OrFailureIf(bool predicate, Error errorOnTrue)`                                  | Adds the provided error `errorOnTrue` to the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                                                                                        |
-| `OrFailureIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onTrue)`  | Executes the provided action `onTrue` on the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing.                                                                   |
-| `OrFailureIf(Func<bool> predicate, Error errorOnTrue)`                            | Adds the provided error `errorOnTrue` to the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing.                                                                   |
-| `AndFailureIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onTrue)` | If the current `OperationResponse<TResponse>` is still a success, executes the provided action `onTrue` on the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
-| `AndFailureIf(Func<bool> predicate, Error errorOnTrue)`                           | If the current `OperationResponse<TResponse>` is still a success, adds the provided error `errorOnTrue` to the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
+| Method                                                                    | Description                                                                                                                                                                                                                     |
+|---------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `OrFailureIf(bool predicate, Action<Operation<TResponse>> onTrue)`        | Executes the provided action `onTrue` on the current `Operation<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                                                                                |
+| `OrFailureIf(bool predicate, Error errorOnTrue)`                          | Adds the provided error `errorOnTrue` to the current `Operation<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                                                                                |
+| `OrFailureIf(Func<bool> predicate, Action<Operation<TResponse>> onTrue)`  | Executes the provided action `onTrue` on the current `Operation<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing.                                                           |
+| `OrFailureIf(Func<bool> predicate, Error errorOnTrue)`                    | Adds the provided error `errorOnTrue` to the current `Operation<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing.                                                           |
+| `AndFailureIf(Func<bool> predicate, Action<Operation<TResponse>> onTrue)` | If the current `Operation<TResponse>` is still a success, executes the provided action `onTrue` on the current `Operation<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
+| `AndFailureIf(Func<bool> predicate, Error errorOnTrue)`                   | If the current `Operation<TResponse>` is still a success, adds the provided error `errorOnTrue` to the current `Operation<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
 
 #### Static Factory Methods
 
-| Method                                                                         | Description                                                                                                                                                                                                                              |
-|--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `FailureIf(bool predicate, Action<OperationResponse<TResponse>> onTrue)`       | Creates a new unknown `OperationResponse<TResponse>`, then executes the provided action `onTrue` on the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                      |
-| `FailureIf(bool predicate, Error errorOnTrue)`                                 | Creates a new unknown `OperationResponse<TResponse>`, then adds the provided error `errorOnTrue` to the current `OperationResponse<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                      |
-| `FailureIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onTrue)` | Creates a new unknown `OperationResponse<TResponse>`, then executes the provided action `onTrue` on the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
-| `FailureIf(Func<bool> predicate, Error errorOnTrue)`                           | Creates a new unknown `OperationResponse<TResponse>`, then adds the provided error `errorOnTrue` to the current `OperationResponse<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
+| Method                                                                 | Description                                                                                                                                                                                                              |
+|------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `FailureIf(bool predicate, Action<Operation<TResponse>> onTrue)`       | Creates a new unknown `Operation<TResponse>`, then executes the provided action `onTrue` on the current `Operation<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                      |
+| `FailureIf(bool predicate, Error errorOnTrue)`                         | Creates a new unknown `Operation<TResponse>`, then adds the provided error `errorOnTrue` to the current `Operation<TResponse>` if the provided boolean `predicate` is `true`, otherwise do nothing.                      |
+| `FailureIf(Func<bool> predicate, Action<Operation<TResponse>> onTrue)` | Creates a new unknown `Operation<TResponse>`, then executes the provided action `onTrue` on the current `Operation<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
+| `FailureIf(Func<bool> predicate, Error errorOnTrue)`                   | Creates a new unknown `Operation<TResponse>`, then adds the provided error `errorOnTrue` to the current `Operation<TResponse>` if the boolean result of the provided predicate function is `true`, otherwise do nothing. |
 
 </details>
 
@@ -193,19 +187,19 @@ Asynchronous method of `FailureIf.Sync`.
 
 #### Methods
 
-| Method                                                                                       |
-|----------------------------------------------------------------------------------------------|
-| `OrFailureIfAsync(Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onTrue)`  |
-| `OrFailureIfAsync(Func<Task<bool>> predicate, Error errorOnTrue)`                            |
-| `AndFailureIfAsync(Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onTrue)` |
-| `AndFailureIfAsync(Func<Task<bool>> predicate, Error errorOnTrue)`                           |
+| Method                                                                               |
+|--------------------------------------------------------------------------------------|
+| `OrFailureIfAsync(Func<Task<bool>> predicate, Action<Operation<TResponse>> onTrue)`  |
+| `OrFailureIfAsync(Func<Task<bool>> predicate, Error errorOnTrue)`                    |
+| `AndFailureIfAsync(Func<Task<bool>> predicate, Action<Operation<TResponse>> onTrue)` |
+| `AndFailureIfAsync(Func<Task<bool>> predicate, Error errorOnTrue)`                   |
 
 #### Static Factory Methods
 
-| Method                                                                                    |
-|-------------------------------------------------------------------------------------------|
-| `FailureIfAsync(Func<Task<bool>> predicate, Action<OperationResponse<TResponse>> onTrue)` |
-| `FailureIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                          |
+| Method                                                                            |
+|-----------------------------------------------------------------------------------|
+| `FailureIfAsync(Func<Task<bool>> predicate, Action<Operation<TResponse>> onTrue)` |
+| `FailureIfAsync(Func<Task<bool>> predicate, Error errorOnFalse)`                  |
 
 </details>
 
@@ -247,7 +241,7 @@ Representing an error with both a code and a description. It is commonly used to
 <details>
   <summary><code>Result</code></summary>
 
-Use the `Result` class in scenarios where you need to handle logic before passing the relevant information to the `OperationResponse<TResponse>`.
+Use the `Result` class in scenarios where you need to handle logic before passing the relevant information to the `Operation<TResponse>`.
 <br>
 It used as an intermediary layer that can encapsulate and communicate information between services or methods.
 
@@ -307,56 +301,56 @@ Use `Result<TValue>` in case there are `TValue` will returned.
 
 </details>
 <details>
-  <summary><code>OperationResponseSettings</code></summary>
+  <summary><code>OperationSettings</code></summary>
 
-Provides a central place to manage and configure settings related to the serialization of `OperationResponse<TResponse>` objects.
+Provides a central place to manage and configure settings related to the serialization of `Operation<TResponse>` objects.
 
 #### Properties
 
-| Property                  | Type                    | Description                                                                                     |
-|---------------------------|-------------------------|-------------------------------------------------------------------------------------------------|
-| **JsonSerializerOptions** | `JsonSerializerOptions` | The JSON serialization options used for custom serialization of `OperationResponse<TResponse>`. |
+| Property                  | Type                    | Description                                                                             |
+|---------------------------|-------------------------|-----------------------------------------------------------------------------------------|
+| **JsonSerializerOptions** | `JsonSerializerOptions` | The JSON serialization options used for custom serialization of `Operation<TResponse>`. |
 
 #### Methods
 
-| Method                                                                     | Description                                                           |
-|----------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| `ResetConverterFactory(JsonConverterFactory converterFactory)`             | Resets the JSON converter factory for `OperationResponse<TResponse>`. |
-| `ResetConverterFactory<TJsonConverter>()`                                  | Resets the JSON converter factory for `OperationResponse<TResponse>`. |
-| `ResetErrorConverter(JsonConverter<IReadOnlyCollection<Error>> converter)` | Resets the JSON converter for `IReadOnlyCollection<Error>`.           |
-| `ResetErrorConverter<TJsonConverter>()`                                    | Resets the JSON converter for `IReadOnlyCollection<Error>`.           |
-| `ResetExternalPropsConverter(JsonConverter<ExternalProps> converter)`      | Resets the JSON converter for `ExternalProps`.                        |
-| `ResetExternalPropsConverter<TJsonConverter>()`                            | Resets the JSON converter for `ExternalProps`.                        |
+| Method                                                                     | Description                                                   |
+|----------------------------------------------------------------------------|---------------------------------------------------------------|
+| `ResetConverterFactory(JsonConverterFactory converterFactory)`             | Resets the JSON converter factory for `Operation<TResponse>`. |
+| `ResetConverterFactory<TJsonConverter>()`                                  | Resets the JSON converter factory for `Operation<TResponse>`. |
+| `ResetErrorConverter(JsonConverter<IReadOnlyCollection<Error>> converter)` | Resets the JSON converter for `IReadOnlyCollection<Error>`.   |
+| `ResetErrorConverter<TJsonConverter>()`                                    | Resets the JSON converter for `IReadOnlyCollection<Error>`.   |
+| `ResetExternalPropsConverter(JsonConverter<ExternalProps> converter)`      | Resets the JSON converter for `ExternalProps`.                |
+| `ResetExternalPropsConverter<TJsonConverter>()`                            | Resets the JSON converter for `ExternalProps`.                |
 
-Use the `OperationResponseSettings` class to configure the JSON serialization options for `OperationResponse<TResponse>` and to
+Use the `OperationSettings` class to configure the JSON serialization options for `Operation<TResponse>` and to
 manage custom JSON converters.
 
 </details>
 
 <details>
-  <summary><code>OperationResponseServiceCollectionExtensions</code></summary>
+  <summary><code>OperationServiceCollectionExtensions</code></summary>
 
-Offers extension methods for configuring the `OperationResponse<TResponse>` JSON serialization options within MVC and HTTP serialization options in ASP.NET Core.
+Offers extension methods for configuring the `Operation<TResponse>` JSON serialization options within MVC and HTTP serialization options in ASP.NET Core.
 
 #### Methods
 
-| Method                                                                                                                                                                                                                                                                                           | Description                                                                                                                 |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `AddOperationResponseSerializerOptions(JsonConverterFactory? operationResponseJsonConverterFactory = null, JsonConverter<IReadOnlyCollection<Error>>? errorJsonConverter = null, JsonConverter<ExternalProps>? externalPropsJsonConverter = null, Action<JsonSerializerOptions>? action = null)` | Configures JSON serialization options for `OperationResponse<TResponse>` and related objects within the service collection. |
+| Method                                                                                                                                                                                                                                                                           | Description                                                                                                         |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| `AddOperationSerializerOptions(JsonConverterFactory? operationJsonConverterFactory = null, JsonConverter<IReadOnlyCollection<Error>>? errorJsonConverter = null, JsonConverter<ExternalProps>? externalPropsJsonConverter = null, Action<JsonSerializerOptions>? action = null)` | Configures JSON serialization options for `Operation<TResponse>` and related objects within the service collection. |
 
-Use the `OperationResponseServiceCollectionExtensions` class when you want to configure JSON serialization options for your ASP.NET Core application, especially when working with `OperationResponse<TResponse>` and related types.
+Use the `OperationServiceCollectionExtensions` class when you want to configure JSON serialization options for your ASP.NET Core application, especially when working with `Operation<TResponse>` and related types.
 
 </details>
 <details>
-  <summary><code>OperationResponseWrapper</code></summary>
+  <summary><code>OperationWrapper</code></summary>
 
-| Method                                                                                                                          | Description                                                                                                    |
-|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| `ToIActionResult<TResponse>(this OperationResponse<TResponse> OperationResponse<TResponse>, object? serializerSettings = null)` | Converts an `OperationResponse<TResponse>` to a `JsonResult`.                                                  |
-| `ToIActionResultAsync<TResponse>(this Task<OperationResponse<TResponse>> task, object? serializerSettings = null)`              | Asynchronously converts an `OperationResponse<TResponse>` to a `JsonResult`.                                   |
-| `ToIResult<TResponse>(this OperationResponse<TResponse> OperationResponse<TResponse>,JsonSerializerOptions? options = null)`    | Converts an `OperationResponse<TResponse>` to a `Results.Json` (supported in .NET 6.0 or greater).             |
-| `ToIResultAsync<TResponse>(this Task<OperationResponse<TResponse>> task,JsonSerializerOptions? options = null)`                 | Asynchronously converts `OperationResponse<TResponse>` to a `Results.Json` (supported in .NET 6.0 or greater). |
-| `ToOperationResponse<TResponse>(this IdentityResult identityResult)`                                                            | Converts an `IdentityResult` to an `OperationResponse<TResponse>`.                                             |
+| Method                                                                                                          | Description                                                                                            |
+|-----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| `ToIActionResult<TResponse>(this Operation<TResponse> Operation<TResponse>, object? serializerSettings = null)` | Converts an `Operation<TResponse>` to a `JsonResult`.                                                  |
+| `ToIActionResultAsync<TResponse>(this Task<Operation<TResponse>> task, object? serializerSettings = null)`      | Asynchronously converts an `Operation<TResponse>` to a `JsonResult`.                                   |
+| `ToIResult<TResponse>(this Operation<TResponse> Operation<TResponse>,JsonSerializerOptions? options = null)`    | Converts an `Operation<TResponse>` to a `Results.Json` (supported in .NET 6.0 or greater).             |
+| `ToIResultAsync<TResponse>(this Task<Operation<TResponse>> task,JsonSerializerOptions? options = null)`         | Asynchronously converts `Operation<TResponse>` to a `Results.Json` (supported in .NET 6.0 or greater). |
+| `ToOperation<TResponse>(this IdentityResult identityResult)`                                                    | Converts an `IdentityResult` to an `Operation<TResponse>`.                                             |
 
 </details>
 
@@ -376,12 +370,12 @@ For defining errors there are 3 ways:
 All errors set to `List<Error>`.
 
 ```csharp
-public class SampleRequestHandler : IRequestHandler<Request,OperationResponse>
+public class SampleRequestHandler : IRequestHandler<Request,Operation<NoResponse>>
 {
     // ctor and injections
     
-    public async Task<OperationResponse> HandelAsync(Request request)
-        => await OperationResponse
+    public async Task<Operation<NoResponse>> HandelAsync(Request request)
+        => await Operation
             .SuccessIf(request.Prop == true, "the error") // way 1
             .OrFailureIf(() => request.Prop == true, new Error("the error")) // way 2
             .OrFailureIf(request.Prop == true, new SpecificError("the code", "description")) // way 3
@@ -398,7 +392,7 @@ public class SampleRequestHandler : IRequestHandler<Request,OperationResponse>
 }
 ```
 
-The deference between `Or` / `And` methods is the `And` methods check if `OperationResponse<TResponse>` is still success before execute, otherwise will skip.
+The deference between `Or` / `And` methods is the `And` methods check if `Operation<TResponse>` is still success before execute, otherwise will skip.
 <br>
 So you may use `And` in case you have expensive check that you only want to check when everything else is alright.
 </details>
@@ -410,8 +404,8 @@ You can use `SetStatusCode()` method to set custom status code you need.
 No need to set the **Ok** & **BadRequest** status because will automatically set if the `Errors` property was empty or not.
 
 ```csharp
-    public OperationResponse Handel(Request request)
-        => OperationResponse
+    public Operation<NoResponse> Handel(Request request)
+        => Operation<NoResponse>
             .IfSuccsus(/* passing params */)
             .OnSuccess(op =>
             {
@@ -421,10 +415,10 @@ No need to set the **Ok** & **BadRequest** status because will automatically set
 ```
 
 ```csharp
-    public OperationResponse Handel(Request request)
+    public Operation<NoResponse> Handel(Request request)
     {
         // logic
-        retrun OperationResponse.SetStatusCode(HttpStatusCode.Continue)
+        retrun Operation<NoResponse>.SetStatusCode(HttpStatusCode.Continue)
     } 
 ```
 
@@ -433,12 +427,12 @@ No need to set the **Ok** & **BadRequest** status because will automatically set
   <summary>How to set message</summary>
 
 ```diff
-public class SampleRequestHandler : IRequestHandler<Request,OperationResponse>
+public class SampleRequestHandler : IRequestHandler<Request,Operation>
 {
     // ctor and injections
     
-    public async Task<OperationResponse> HandelAsync(Request request)
-        => await OperationResponse
+    public async Task<Operation<NoResponse>> HandelAsync(Request request)
+        => await Operation
             .SuccessIf(request.Prop == true, "the error") // way 1
             .OrFailureIf(request.Prop == true, new Error("the error")) // way 2
             .OrFailureIf(request.Prop == true, new SpecificError("the code", "description")) // way 3
@@ -465,11 +459,11 @@ setters has optional parameter `bool overwrite = false` can make it execute (`Se
 <details>
   <summary>How to set response</summary>
 
-You can use `SetResponse()` method to set the actual data of the operation or just return the response that will implicitly convert to `OperationResponse<TResponse>` with `200` as status code and `OK` as message.
+You can use `SetResponse()` method to set the actual data of the operation or just return the response that will implicitly convert to `Operation<TResponse>` with `200` as status code and `OK` as message.
 
 ```csharp
-    public OperationResponse<Response> Handel(Request request)
-        => OperationResponse<Response>
+    public Operation<Response> Handel(Request request)
+        => Operation<Response>
             .IfSuccsus(/* passing params */)
             .OnSuccess(op =>
             {
@@ -479,7 +473,7 @@ You can use `SetResponse()` method to set the actual data of the operation or ju
 ```
 
 ```csharp
-    public OperationResponse<Response> Handel(Request request)
+    public Operation<Response> Handel(Request request)
     {
         // logic
         retrun new Response(/* passing params */);
@@ -491,31 +485,31 @@ You can use `SetResponse()` method to set the actual data of the operation or ju
 <details>
   <summary>How to serialize</summary>
 
-When serialize `OperationResponse<TResponse>` must use `JsonSerializerOptions` in [OperationResponseSettings](src/OperationResponseSettings.cs).
+When serialize `Operation<TResponse>` must use `JsonSerializerOptions` in [OperationSettings](src/OperationSettings.cs).
 
 ```csharp
-JsonSerializer.Serialize(operationResponse, OperationResponseSettings.JsonSerializerOptions);
+JsonSerializer.Serialize(operation, OperationSettings.JsonSerializerOptions);
 ```
 
 To configure these options for MVC and HTTP serialization in ASP.NET Core. In other words, to use them when calling `ToIActionResult()` or `ToIResult()` should use:
 
 ```csharp
-bulider.Services.AddOperationResponseSerializerOptions();
+bulider.Services.AddOperationSerializerOptions();
 ```
 
-You can also change the default converters or options using `OperationResponseSettings` methods, check the schema [here](#methods-7).
+You can also change the default converters or options using `OperationSettings` methods, check the schema [here](#methods-7).
 
 ```csharp
-OperationResponseSettings.ResetErrorConverter<IgnoreEmptyCombineErrorConverter>();
+OperationSettings.ResetErrorConverter<IgnoreEmptyCombineErrorConverter>();
 ```
 
-or pass to optional parameters in `AddOperationResponseSerializerOptions()`:
+or pass to optional parameters in `AddOperationSerializerOptions()`:
 
 ```csharp
-bulider.Services.AddOperationResponseSerializerOptions(externalPropsJsonConverter: new ExternalPropsConverter());
+bulider.Services.AddOperationSerializerOptions(externalPropsJsonConverter: new ExternalPropsConverter());
 ```
 
-The `JsonSerializerOptions` has 3 JSON converts for *OperationResponse<TResponse>*, *ExternalProps* and *Errors*.
+The `JsonSerializerOptions` has 3 JSON converts for *Operation<TResponse>*, *ExternalProps* and *Errors*.
 
 P.S: can check the available JSON converters in ****Custom JSON converters**** bellow.
 </details>
@@ -525,8 +519,8 @@ P.S: can check the available JSON converters in ****Custom JSON converters**** b
 
 The custom JSON converters divided to:
 
-- OperationResponse<TResponse>
-    - [OperationResponseConverter with Factory](src/Converters/OperationResponseConverter.cs) *(the default)*:
+- Operation<TResponse>
+    - [OperationConverter with Factory](src/Converters/OperationConverter.cs) *(the default)*:
         - `IsSuccess` : serialize to **boolean**.
         - `Message` : serialize to **string** if is not null otherwise to name of status code.
         - `Response` : serialize to **object** if is not null otherwise ignore it.
@@ -696,7 +690,7 @@ The custom JSON converters divided to:
 
 ## Real Scenarios
 
-let say we have
+Let say we have
 
 ```csharp
 public record SingUpRequest(string Email, string Password);
@@ -715,13 +709,13 @@ public static class Errors
 DI registration
 
 ```csharp
-bulider.Services.AddOperationResponseSerializerOptions();
+bulider.Services.AddOperationSerializerOptions();
 ```
 
 Logic
 
 ```csharp
-public class SingUpRequestHandler : IRequestHandler<SingUpRequest, OperationResponse<SingUpResponse>>
+public class SingUpRequestHandler : IRequestHandler<SingUpRequest, Operation<SingUpResponse>>
 {
     private readonly IUserService _userService;
 
@@ -730,8 +724,8 @@ public class SingUpRequestHandler : IRequestHandler<SingUpRequest, OperationResp
         _userService = userService;
     }
 
-    public async Task<OperationResponse<SingUpResponse>> HandelAsync(SingUpRequest request) // #1
-        => await OperationResponse<SingUpResponse>
+    public async Task<Operation<SingUpResponse>> HandelAsync(SingUpRequest request) // #1
+        => await Operation<SingUpResponse>
             .FailureIf(await _userService.IsEmailExistsAsync(request.Email), Errors.Users.EmailAlreadyExists)
             // .FailureIf(await userService.IsEmailExistsAsync(request.Email), new Error("Email is already used")) #2
             // .FailureIf(await userService.IsEmailExistsAsync(request.Email), "Email is already used") #3
@@ -744,18 +738,18 @@ public class SingUpRequestHandler : IRequestHandler<SingUpRequest, OperationResp
                 op.SetResponse(new SingUpResponse(user.Id));
             });
 
-    public async Task<OperationResponse<SingUpResponse>> HandelAsync(SingUpRequest request) // #2
+    public async Task<Operation<SingUpResponse>> HandelAsync(SingUpRequest request) // #2
     {
         if (await _userService.IsEmailExistsAsync(request.Email))
         {
             return Errors.Users.EmailAlreadyExists; // #1 implicit conversion
-            // return OperationResponse<SingUpResponse>.BadRequest().Error(Errors.Users.EmailAlreadyExists); #2
+            // return Operation<SingUpResponse>.BadRequest().Error(Errors.Users.EmailAlreadyExists); #2
         }
 
         var user = new User(request.Email);
         await _userService.CraeteAsync(request.Email, request.Password);
         return new SingUpResponse(user.Id); // #1 implicit conversion
-        // return OperationResponse<SingUpResponse>.Ok().SetResponse(new SingUpResponse(user.Id)); #2
+        // return Operation<SingUpResponse>.Ok().SetResponse(new SingUpResponse(user.Id)); #2
     }
 }
 ```
@@ -766,7 +760,7 @@ Controllers APIs
 public class UsersController : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> SingUp([FromBody] SingUpRequest request, [FromServices] IRequestHandler<SingUpRequest, OperationResponse<SingUpResponse>> handler)
+    public async Task<IActionResult> SingUp([FromBody] SingUpRequest request, [FromServices] IRequestHandler<SingUpRequest, Operation<SingUpResponse>> handler)
         => await handler.HandelAsync(request).ToIActionResultAsync();
 }
 ```
@@ -774,7 +768,7 @@ public class UsersController : BaseController
 Minimal APIs
 
 ```csharp
-app.MapPost("/users/singUp", async ([FromBody] SingUpRequest request, [FromServices] IRequestHandler<SingUpRequest, OperationResponse<SingUpResponse>> handler)
+app.MapPost("/users/singUp", async ([FromBody] SingUpRequest request, [FromServices] IRequestHandler<SingUpRequest, Operation<SingUpResponse>> handler)
     => await handler.HandelAsync(request).ToIResultAsync());
 ```
 
@@ -785,7 +779,7 @@ Outputs
   "IsSuccess": true,
   "Message": "Ok",
   "Response": {
-	"Id": "7BA82D5E-5A84-463B-80A1-34D923F9B027"
+    "Id": "7BA82D5E-5A84-463B-80A1-34D923F9B027"
   }
 }
 ```
@@ -795,7 +789,7 @@ Outputs
   "IsSuccess": false,
   "Message": "BadRequest",
   "Errors": [
-	"Email is already used"
+    "Email is already used"
   ]
 }
 ```

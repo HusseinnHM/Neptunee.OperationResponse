@@ -1,35 +1,35 @@
-namespace Neptunee.OperationsResponse;
+namespace Neptunee.OperationResponse;
 
-public partial class OperationResponse<TResponse>
+public partial class Operation<TResponse>
 {
-    public static OperationResponse<TResponse> FailureIf(bool predicate, Action<OperationResponse<TResponse>> onTrue)
+    public static Operation<TResponse> FailureIf(bool predicate, Action<Operation<TResponse>> onTrue)
         => Unknown().OrFailureIf(predicate, onTrue);
 
-    public static OperationResponse<TResponse> FailureIf(bool predicate, Error errorOnTrue)
+    public static Operation<TResponse> FailureIf(bool predicate, Error errorOnTrue)
         => Unknown().OrFailureIf(predicate, errorOnTrue);
 
-    public static OperationResponse<TResponse> FailureIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onTrue)
+    public static Operation<TResponse> FailureIf(Func<bool> predicate, Action<Operation<TResponse>> onTrue)
         => Unknown().OrFailureIf(predicate, onTrue);
 
-    public static OperationResponse<TResponse> FailureIf(Func<bool> predicate, Error errorOnTrue) 
+    public static Operation<TResponse> FailureIf(Func<bool> predicate, Error errorOnTrue) 
         => Unknown().OrFailureIf(predicate, errorOnTrue);
 
-    public OperationResponse<TResponse> OrFailureIf(bool predicate, Action<OperationResponse<TResponse>> onTrue)
+    public Operation<TResponse> OrFailureIf(bool predicate, Action<Operation<TResponse>> onTrue)
         => OnTrue(predicate, onTrue);
 
-    public OperationResponse<TResponse> OrFailureIf(bool predicate, Error errorOnTrue) 
+    public Operation<TResponse> OrFailureIf(bool predicate, Error errorOnTrue) 
         => OrFailureIf(predicate, response => response.Error(errorOnTrue));
 
-    public OperationResponse<TResponse> OrFailureIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onTrue)
+    public Operation<TResponse> OrFailureIf(Func<bool> predicate, Action<Operation<TResponse>> onTrue)
         => OnTrue(predicate(), onTrue);
 
-    public OperationResponse<TResponse> OrFailureIf(Func<bool> predicate, Error errorOnTrue) 
+    public Operation<TResponse> OrFailureIf(Func<bool> predicate, Error errorOnTrue) 
         => OrFailureIf(predicate, response => response.Error(errorOnTrue));
 
-    public OperationResponse<TResponse> AndFailureIf(Func<bool> predicate, Action<OperationResponse<TResponse>> onTrue)
+    public Operation<TResponse> AndFailureIf(Func<bool> predicate, Action<Operation<TResponse>> onTrue)
         => IsSuccess ? OrFailureIf(predicate, onTrue) : this;
 
 
-    public OperationResponse<TResponse> AndFailureIf(Func<bool> predicate, Error errorOnTrue) 
+    public Operation<TResponse> AndFailureIf(Func<bool> predicate, Error errorOnTrue) 
         => AndFailureIf(predicate, response => response.Error(errorOnTrue));
 }
