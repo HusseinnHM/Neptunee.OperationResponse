@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Http;
 
 
 namespace Neptunee.OperationResponse;
@@ -111,7 +112,7 @@ public partial class Operation<TResponse>
 
     public virtual async Task<Operation<TResponse>> OnFailureAsync(Func<Operation<TResponse>, Task> task)
     {
-        if (IsSuccess)
+        if (IsFailure)
         {
             await task(this);
         }
