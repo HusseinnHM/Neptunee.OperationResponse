@@ -21,6 +21,9 @@ public partial class Operation<TResponse>
     public static Operation<TResponse> BadRequest(string? message = null)
         => Unknown().SetStatusCode(HttpStatusCode.BadRequest).SetMessage(message);
 
+    public static Operation<TResponse> NotFound(string? message = null)
+        => Unknown().SetStatusCode(HttpStatusCode.NotFound).SetMessage(message);
+
     public static Operation<TResponse> Result(Result result)
     {
         var op = Unknown().SetStatusCode(result.StatusCode).SetMessage(result.Message);
