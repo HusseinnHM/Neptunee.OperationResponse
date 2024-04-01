@@ -11,7 +11,7 @@ public class ExternalPropsConverter : JsonConverter<ExternalProps>
 
     public override void Write(Utf8JsonWriter writer, ExternalProps value, JsonSerializerOptions options)
     {
-        writer.WritePropertyName(nameof(ExternalProps));
+        writer.WritePropertyName(options.PropertyNamingPolicy?.ConvertName(nameof(ExternalProps)) ?? nameof(ExternalProps));
         JsonSerializer.Serialize(writer, value);
     }
 }

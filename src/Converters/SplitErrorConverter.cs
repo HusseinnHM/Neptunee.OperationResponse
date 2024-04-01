@@ -10,32 +10,32 @@ public class SplitErrorConverter : JsonConverter<IReadOnlyCollection<Error>>
 
     public override void Write(Utf8JsonWriter writer, IReadOnlyCollection<Error> value, JsonSerializerOptions options)
     {
-        WriteErrors(writer,value.Where(e => e is not SpecificError));
-        WriteSpecificErrors(writer,value.OfType<SpecificError>());
+        WriteErrors(writer, value.Where(e => e is not SpecificError), options);
+        WriteSpecificErrors(writer, value.OfType<SpecificError>(), options);
     }
 
-    protected void WriteErrors(Utf8JsonWriter writer, IEnumerable<Error> errors)
+    protected void WriteErrors(Utf8JsonWriter writer, IEnumerable<Error> errors, JsonSerializerOptions options)
     {
-        writer.WriteStartArray(nameof(Error) + "s");
+        writer.WriteStartArray(options.PropertyNamingPolicy?.ConvertName(nameof(Error) + "s") ?? nameof(Error) + "s");
         foreach (var error in errors)
         {
             writer.WriteStringValue(error.Description);
         }
+
         writer.WriteEndArray();
     }
 
-    protected void WriteSpecificErrors(Utf8JsonWriter writer, IEnumerable<SpecificError> errors)
+    protected void WriteSpecificErrors(Utf8JsonWriter writer, IEnumerable<SpecificError> errors, JsonSerializerOptions options)
     {
-        writer.WriteStartArray(nameof(SpecificError) + "s");
+        writer.WriteStartArray(options.PropertyNamingPolicy?.ConvertName(nameof(Error) + "s") ?? nameof(Error) + "s");
         foreach (var error in errors)
         {
             writer.WriteStartObject();
-            writer.WriteString(nameof(error.Code), error.Code);
-            writer.WriteString(nameof(error.Description), error.Description);
+            writer.WriteString(options.PropertyNamingPolicy?.ConvertName(nameof(error.Code)) ?? nameof(error.Code), error.Code);
+            writer.WriteString(options.PropertyNamingPolicy?.ConvertName(nameof(error.Description)) ?? nameof(error.Description), error.Description);
             writer.WriteEndObject();
         }
 
         writer.WriteEndArray();
     }
-
 }

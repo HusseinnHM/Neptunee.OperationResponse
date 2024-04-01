@@ -10,7 +10,7 @@ public class CombineErrorConverter : JsonConverter<IReadOnlyCollection<Error>>
 
     public override void Write(Utf8JsonWriter writer, IReadOnlyCollection<Error> value, JsonSerializerOptions options)
     {
-        writer.WriteStartArray(nameof(Error) + "s");
+        writer.WriteStartArray(options.PropertyNamingPolicy?.ConvertName(nameof(Error) + "s") ?? nameof(Error) + "s");
         foreach (var error in value)
         {
             writer.WriteStringValue(error.ToString());

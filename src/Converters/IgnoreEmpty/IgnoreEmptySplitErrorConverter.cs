@@ -11,12 +11,12 @@ public class IgnoreEmptySplitErrorConverter : SplitErrorConverter
 
         if (errors.Any())
         {
-            WriteErrors(writer,errors);
+            WriteErrors(writer,errors,options);
         }
 
         if (specErrors.Any())
         {
-            WriteSpecificErrors(writer,specErrors);
+            WriteSpecificErrors(writer,specErrors,options);
         }
     }
 }

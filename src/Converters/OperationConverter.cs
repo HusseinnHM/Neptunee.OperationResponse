@@ -31,12 +31,12 @@ internal class OperationConverter<TResponse> : JsonConverter<Operation<TResponse
         writer.WriteStartObject();
         if (value.HasResponse)
         {
-            writer.WritePropertyName(nameof(value.Response));
+            writer.WritePropertyName(options.PropertyNamingPolicy?.ConvertName(nameof(value.Response)) ?? nameof(value.Response));
             JsonSerializer.Serialize(writer, value.Response, options);
         }
 
-        writer.WriteBoolean(nameof(value.IsSuccess), value.IsSuccess);
-        writer.WriteString(nameof(value.Message), value.Message ?? value.StatusCode.ToString());
+        writer.WriteBoolean(options.PropertyNamingPolicy?.ConvertName(nameof(value.IsSuccess)) ?? nameof(value.IsSuccess), value.IsSuccess);
+        writer.WriteString(options.PropertyNamingPolicy?.ConvertName(nameof(value.Message)) ?? nameof(value.Message), value.Message ?? value.StatusCode.ToString());
         JsonSerializer.Serialize(writer, value.Errors, options);
         JsonSerializer.Serialize(writer, value.ExternalProps, options);
         writer.WriteEndObject();
