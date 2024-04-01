@@ -16,7 +16,7 @@
         <PackageIcon>icon.png</PackageIcon>
         <Description>Neptunee.OperationResponse streamlines how you handle the response in your application. It eliminates complex if/else statements and offers multi-status support, a user-friendly API,validations checks, JSON compatibility, Sync/Async operations, and more. It's a clean way to manage the outcomes of your backend.</Description>
         <TargetFrameworks>net5.0;net6.0;net7.0;</TargetFrameworks>
-        <Version>1.0.4</Version>
+        <Version>1.0.5</Version>
     </PropertyGroup>
 
     <ItemGroup>
